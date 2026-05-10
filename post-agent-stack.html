@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The AI Agent Stack Explained: Tools, Skills, Plugins, MCP &amp; A2A — AI Navigator</title>
+  <meta name="description" content="A clear-eyed breakdown of every layer of the AI agent stack — tools, MCP servers, skills, plugins, and Google's A2A protocol — and how they fit together." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Callout boxes ── */
+    .callout {
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      border-left: 3px solid;
+    }
+    .callout--info {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: #1e40af;
+    }
+    .callout--tip {
+      background: #f0fdf4;
+      border-color: #16a34a;
+      color: #14532d;
+    }
+    .callout strong { font-weight: 700; }
+
+    /* ── Layer badge ── */
+    .layer-label {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      background: var(--accent-light);
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── Comparison tables ── */
+    .cmp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 1.5rem 0;
+    }
+    .cmp-table th {
+      background: var(--bg-subtle);
+      padding: 0.65rem 0.9rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .cmp-table td {
+      padding: 0.75rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: top;
+      line-height: 1.55;
+    }
+    .cmp-table tr:last-child td { border-bottom: none; }
+    .cmp-table tr:hover td { background: var(--bg-subtle); }
+    .cmp-table td:first-child { font-weight: 600; white-space: nowrap; }
+
+    /* ── Stack diagram ── */
+    .stack-diagram {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin: 1.75rem 0;
+    }
+    .stack-layer {
+      border-radius: var(--radius);
+      padding: 0.85rem 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .stack-layer__num {
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      opacity: 0.65;
+      min-width: 3rem;
+    }
+    .stack-layer__name {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .stack-layer__desc {
+      font-size: 0.82rem;
+      opacity: 0.75;
+      margin-left: auto;
+      text-align: right;
+    }
+    .stack-layer--l1 { background: #eff6ff; color: #1e40af; }
+    .stack-layer--l2 { background: #f0fdf4; color: #14532d; }
+    .stack-layer--l3 { background: #fdf4ff; color: #6b21a8; }
+    .stack-layer--l4 { background: #fff7ed; color: #9a3412; }
+    .stack-layer--l5 { background: #fefce8; color: #854d0e; }
+    .stack-layer--l6 { background: #f0f9ff; color: #0c4a6e; }
+
+    @media (max-width: 600px) {
+      .stack-layer__desc { display: none; }
+      .cmp-table { font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <span class="nav__logo-dot"></span>
+        AI Navigator
+      </a>
+      <ul class="nav__links">
+        <li><a href="index.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Post ── -->
+  <article class="post-layout">
+
+    <header class="post-header">
+      <div class="post-header__tags">
+        <span class="tag tag--ai-tools">AI Tools</span>
+        <span class="tag tag--tutorials">Tutorials</span>
+      </div>
+      <h1 class="post-header__title">
+        The AI Agent Stack Explained:<br />Tools, Skills, Plugins, MCP &amp; A2A
+      </h1>
+      <div class="post-header__meta">
+        <span>Lorenzo Bartolo</span>
+        <span>·</span>
+        <span>9 May 2026</span>
+        <span>·</span>
+        <span>10 min read</span>
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      <p>
+        If you've spent any time working with AI agents, you've almost certainly run into a wall
+        of overlapping terminology. Tools. Skills. Plugins. MCP servers. A2A protocol. These
+        words get used interchangeably in blog posts and documentation, but they describe
+        fundamentally different things. Understanding the distinction isn't just semantic
+        pedantry — it's the difference between building systems that scale and bolting things
+        together that break.
+      </p>
+
+      <p>
+        This post breaks down each layer of the AI agent stack from the ground up, and then
+        zooms in on Google's Agent-to-Agent (A2A) protocol, which is quietly becoming one of
+        the most important infrastructure standards in the industry.
+      </p>
+
+      <!-- Stack overview diagram -->
+      <div class="stack-diagram">
+        <div class="stack-layer stack-layer--l1">
+          <span class="stack-layer__num">Layer 1</span>
+          <span class="stack-layer__name">Tools</span>
+          <span class="stack-layer__desc">The atomic unit of agent action</span>
+        </div>
+        <div class="stack-layer stack-layer--l2">
+          <span class="stack-layer__num">Layer 2</span>
+          <span class="stack-layer__name">MCP Servers</span>
+          <span class="stack-layer__desc">Toolboxes — coherent bundles of tools</span>
+        </div>
+        <div class="stack-layer stack-layer--l3">
+          <span class="stack-layer__num">Layer 3</span>
+          <span class="stack-layer__name">Skills</span>
+          <span class="stack-layer__desc">Encoded expertise and domain judgment</span>
+        </div>
+        <div class="stack-layer stack-layer--l4">
+          <span class="stack-layer__num">Layer 4</span>
+          <span class="stack-layer__name">Plugins</span>
+          <span class="stack-layer__desc">Packaged, distributable workflows</span>
+        </div>
+        <div class="stack-layer stack-layer--l5">
+          <span class="stack-layer__num">Layer 5</span>
+          <span class="stack-layer__name">Agents &amp; Orchestration</span>
+          <span class="stack-layer__desc">LLM + tools + skills, working toward goals</span>
+        </div>
+        <div class="stack-layer stack-layer--l6">
+          <span class="stack-layer__num">Protocol</span>
+          <span class="stack-layer__name">A2A</span>
+          <span class="stack-layer__desc">Cross-agent, cross-org communication</span>
+        </div>
+      </div>
+
+      <!-- Layer 1 -->
+      <h2>Layer 1: Tools — The Atomic Unit of Agent Action</h2>
+
+      <p>
+        A <strong>tool</strong> is the most primitive building block in an AI agent system. It
+        is a single callable function — a named action with defined inputs and outputs that an
+        AI model can invoke mid-reasoning.
+      </p>
+
+      <p>Some examples to make this concrete:</p>
+
+      <ul>
+        <li><code>search_web(query: string)</code> — returns search results</li>
+        <li><code>read_file(path: string)</code> — returns file contents</li>
+        <li><code>execute_bash(command: string)</code> — runs a shell command</li>
+        <li><code>take_screenshot()</code> — captures the current screen</li>
+      </ul>
+
+      <p>
+        When an LLM has access to tools, it doesn't just generate text — it generates
+        <em>decisions</em>. The model reasons about what needs to happen, selects the right
+        tool, provides the required inputs, observes the output, and continues reasoning. This
+        loop — reason, act, observe, repeat — is the foundation of agentic behaviour.
+      </p>
+
+      <div class="callout callout--info">
+        <strong>The description matters more than you'd think.</strong> Tools are defined by a
+        name, a description, and a JSON schema for their inputs. The description is how the
+        model understands what a tool does and when to use it. A poorly described tool is
+        nearly as useless as no tool at all.
+      </div>
+
+      <p>
+        Tool/function calling is now supported by every major LLM provider — OpenAI, Anthropic,
+        Google, Mistral, and others. The underlying pattern is standardised; the exact API shape
+        varies slightly between providers.
+      </p>
+
+      <!-- Layer 2 -->
+      <h2>Layer 2: MCP Servers — The Toolbox</h2>
+
+      <p>
+        A single tool is useful. Thirty related tools delivered as a coherent unit are a
+        capability.
+      </p>
+
+      <p>
+        <strong>MCP (Model Context Protocol)</strong> is an open standard, originally developed
+        by Anthropic and now widely adopted across the industry, that defines how tools are
+        packaged, exposed, and consumed by AI agents. An MCP server is essentially a toolbox:
+        a running process that declares a set of related tools and handles execution when an
+        agent calls them.
+      </p>
+
+      <p>
+        Consider a GitHub MCP server. Rather than a developer wiring up each GitHub API call
+        individually, they install the GitHub MCP server and the agent gains the full suite
+        in one step — tools like <code>list_pull_requests</code>, <code>create_branch</code>,
+        <code>get_file_contents</code>, <code>add_issue_comment</code>, and
+        <code>merge_pull_request</code>.
+      </p>
+
+      <p>
+        The key insight is interoperability. Because the protocol is standardised, an MCP server
+        built for Claude will work with Gemini, GPT-4, Copilot, and any other MCP-compatible
+        runtime. As of 2026, MCP is supported natively by Anthropic, OpenAI, Microsoft, and
+        Google — and by most major agent frameworks including LangGraph, CrewAI, and AutoGen.
+        Investment in MCP servers is investment that travels.
+      </p>
+
+      <div class="table-wrap">
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Traditional API Integration</th>
+              <th>MCP Server</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Wiring</td>
+              <td>Per-application, per-LLM</td>
+              <td>Write once, works everywhere</td>
+            </tr>
+            <tr>
+              <td>Discovery</td>
+              <td>None — hardcoded</td>
+              <td>Agents discover tools dynamically</td>
+            </tr>
+            <tr>
+              <td>Portability</td>
+              <td>Tied to a specific implementation</td>
+              <td>Any MCP-compatible runtime</td>
+            </tr>
+            <tr>
+              <td>Maintenance</td>
+              <td>Breaks when LLM provider changes</td>
+              <td>Isolated from LLM changes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Layer 3 -->
+      <h2>Layer 3: Skills — Encoded Expertise</h2>
+
+      <p>
+        Tools give an agent <em>capability</em>. Skills give an agent <em>judgment</em>.
+      </p>
+
+      <p>
+        A <strong>skill</strong> is a set of instructions that tells an agent how to approach
+        a specific class of task well. It's not a new tool — it's accumulated best practice,
+        workflow logic, and domain expertise delivered as a structured prompt or instruction
+        document.
+      </p>
+
+      <p>
+        Think of the difference between handing someone a hammer (a tool) versus teaching them
+        carpentry (a skill). The skill encodes: what order to do things in, what to watch out
+        for, what a good outcome looks like, and how to handle edge cases.
+      </p>
+
+      <p>
+        An example: a skill for generating financial tear sheets doesn't give Claude new API
+        access. It tells Claude which data points matter, how to structure the analysis, what
+        financial ratios to calculate and why, and how to present findings for a specific
+        audience. Strip out that skill, and the same tools produce generic, shallow output.
+      </p>
+
+      <div class="callout callout--tip">
+        <strong>Skills are currently proprietary.</strong> Anthropic has a skill format for
+        Claude/Cowork, OpenAI has an equivalent for GPTs, Google has Gems. There is no
+        cross-LLM standard for skills at the time of writing — which means they're also where
+        platforms differentiate.
+      </div>
+
+      <!-- Layer 4 -->
+      <h2>Layer 4: Plugins — The Distribution Unit</h2>
+
+      <p>
+        If tools are ingredients and skills are recipes, <strong>plugins</strong> are the
+        packaged product.
+      </p>
+
+      <p>A plugin bundles together:</p>
+
+      <ul>
+        <li>One or more MCP servers (tools and their implementations)</li>
+        <li>Skills (instructions for how to use those tools effectively)</li>
+        <li>Configuration, authentication flows, and metadata</li>
+      </ul>
+
+      <p>
+        Plugins are the unit you install, share, and distribute. A data analytics plugin might
+        include an MCP server connecting to a financial data API, a skill for building peer
+        comparison models, another skill for generating earnings previews, and all the OAuth
+        config to authenticate with the data provider. One install, full workflow.
+      </p>
+
+      <p>
+        This matters because the real value in an agent system often isn't in any individual
+        tool — it's in the combination of tools, the expertise in how to use them together,
+        and the workflow that ties them into something repeatable.
+      </p>
+
+      <!-- Layer 5 -->
+      <h2>Layer 5: Agents and Orchestration</h2>
+
+      <p>
+        Stack tools, MCP servers, skills, and plugins together, add a capable LLM, and you have
+        an <strong>agent</strong>: a system that can reason, plan, take actions, observe
+        outcomes, and work toward goals autonomously.
+      </p>
+
+      <p>
+        Multi-agent systems take this further. Rather than one agent doing everything, you have
+        an <strong>orchestrator</strong> that delegates subtasks to <strong>specialist
+        agents</strong>, each optimised for a specific domain. A research agent, a coding agent,
+        a writing agent, and a QA agent might all run in parallel — each with their own tools
+        and skills — with the orchestrator stitching their outputs into a coherent result.
+      </p>
+
+      <p>This is where the A2A protocol enters.</p>
+
+      <!-- A2A -->
+      <h2>The A2A Protocol: How Agents Talk to Each Other</h2>
+
+      <p>
+        MCP solves how an agent connects to tools and data. A2A solves a different problem:
+        <strong>how do two agents — potentially built by different companies, running on
+        different LLMs, deployed on different infrastructure — communicate with each
+        other?</strong>
+      </p>
+
+      <p>
+        Google published the Agent-to-Agent (A2A) protocol in April 2025 and subsequently
+        donated it to the Linux Foundation. It is an open specification for agent
+        interoperability across organisational and technological boundaries.
+      </p>
+
+      <h3>The Core Problem A2A Solves</h3>
+
+      <p>
+        Without a standard, agent-to-agent communication is bespoke. If Company A builds an
+        agent on Claude and Company B builds an agent on Gemini, and they want those agents to
+        collaborate on a task, someone has to write custom integration code. That code breaks
+        when either agent changes. It doesn't generalise. It doesn't scale.
+      </p>
+
+      <p>
+        A2A creates a common language so any A2A-compliant agent can communicate with any
+        other, regardless of the underlying LLM, framework, or vendor.
+      </p>
+
+      <h3>How A2A Works</h3>
+
+      <p>A2A is built on three foundational concepts:</p>
+
+      <p>
+        <strong>Agent Cards</strong> — Every A2A-compliant agent publishes an Agent Card: a
+        JSON document that describes what the agent can do, what inputs it accepts, what outputs
+        it produces, and how to reach it. This is the discovery mechanism. An orchestrator
+        agent looking for help with a specific task queries available Agent Cards to find the
+        right specialist.
+      </p>
+
+      <p>
+        <strong>Tasks</strong> — Communication in A2A is task-oriented. A client agent sends
+        a Task object to a remote agent — a structured request with defined inputs, expected
+        outputs, and a lifecycle (pending → working → completed/failed). For long-running work,
+        both agents stay in sync via status updates throughout. This provides something that
+        informal message-passing doesn't: a shared model of what "done" looks like, and a
+        clear mechanism for handling partial completion, errors, and timeouts.
+      </p>
+
+      <p>
+        <strong>Transport Layer</strong> — A2A runs over HTTPS with JSON-RPC 2.0 as the data
+        format, with Server-Sent Events (SSE) for streaming updates on long-running tasks.
+        A2A agents are reachable over the standard web — no proprietary networking stack
+        required.
+      </p>
+
+      <h3>A2A vs. MCP: Complementary, Not Competing</h3>
+
+      <p>
+        This is a common point of confusion. The clean distinction:
+      </p>
+
+      <div class="table-wrap">
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>MCP</th>
+              <th>A2A</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>What it connects</td>
+              <td>Agent ↔ Tools / Data</td>
+              <td>Agent ↔ Agent</td>
+            </tr>
+            <tr>
+              <td>Scope</td>
+              <td>Within an agent system</td>
+              <td>Across agent systems and organisations</td>
+            </tr>
+            <tr>
+              <td>Analogy</td>
+              <td>A worker's toolbelt</td>
+              <td>A contractor hiring another contractor</td>
+            </tr>
+            <tr>
+              <td>Governed by</td>
+              <td>Anthropic (open spec)</td>
+              <td>Linux Foundation</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        In a mature multi-agent architecture, both are present. An agent uses MCP to reach its
+        own tools and data sources. It uses A2A to delegate work to other agents — including
+        agents it didn't build and doesn't control.
+      </p>
+
+      <h3>2026 Adoption Status</h3>
+
+      <p>
+        The adoption curve has been steep. As of early 2026, more than 150 organisations
+        support A2A, including Google, Microsoft, AWS, Salesforce, SAP, ServiceNow, Workday,
+        and IBM. Major cloud platforms have integrated it natively: Azure AI Foundry treats
+        A2A as a first-class citizen for multi-agent deployments, Amazon Bedrock AgentCore
+        offers native A2A support, and Google Cloud has deep integration across Vertex AI and
+        Workspace agents.
+      </p>
+
+      <p>
+        This breadth of adoption within roughly a year of publication is significant. It
+        suggests A2A is winning the interoperability standards race — which means building
+        against it is a reasonable bet for production systems.
+      </p>
+
+      <!-- Worked example -->
+      <h2>How It All Fits Together: A Worked Example</h2>
+
+      <p>
+        Say you're building a competitive intelligence system. Here's how the full stack comes
+        together:
+      </p>
+
+      <p>
+        <strong>Tools</strong> handle the primitives: search the web, scrape a URL, read a
+        file, write to a database.
+      </p>
+
+      <p>
+        <strong>MCP servers</strong> bundle those tools into coherent capabilities: a web
+        research MCP, a document processing MCP, a CRM integration MCP.
+      </p>
+
+      <p>
+        <strong>Skills</strong> encode the expertise: how to structure a competitive analysis,
+        what signals to weight, how to present findings for an executive audience.
+      </p>
+
+      <p>
+        <strong>Plugins</strong> package MCP servers and skills into installable units your
+        team can deploy without rebuilding the workflow from scratch.
+      </p>
+
+      <p>
+        <strong>Agents</strong> use plugins and tools to do the actual work — a research agent
+        gathers data, an analysis agent synthesises it, a writing agent produces the
+        deliverable.
+      </p>
+
+      <p>
+        <strong>A2A</strong> lets your internal orchestrator delegate the "research public
+        filings for Company X" subtask to a specialist financial agent running on a different
+        system — maybe a compliance-approved agent your legal team controls, or a third-party
+        data provider's agent accessed as a service.
+      </p>
+
+      <blockquote>
+        MCP is what each agent uses to reach its own tools. A2A is what agents use to reach
+        each other.
+      </blockquote>
+
+      <!-- What's still evolving -->
+      <h2>What's Still Evolving</h2>
+
+      <p>
+        <strong>Skills remain proprietary.</strong> There's no cross-LLM standard for skills.
+        A skill built for Claude won't run on Gemini. This is the layer most in need of
+        standardisation and the one least likely to get it soon — it's where platforms
+        differentiate.
+      </p>
+
+      <p>
+        <strong>Agent identity and trust are unsolved.</strong> A2A defines how agents
+        communicate, but the question of how an orchestrator verifies it's talking to the agent
+        it thinks it is — and what permissions that agent should have — is still being worked
+        out. Agent Cards can be spoofed; there's no PKI-equivalent for agent identity yet.
+      </p>
+
+      <p>
+        <strong>Observability is immature.</strong> In a multi-agent system with ten agents
+        calling each other via A2A and each using MCP tools, tracing a failure back to its
+        source is genuinely hard. Tooling for this is improving but not yet at the level of
+        maturity that engineers expect from distributed systems.
+      </p>
+
+      <!-- Bottom line -->
+      <h2>The Bottom Line</h2>
+
+      <p>
+        The AI agent stack is converging on a two-protocol world: <strong>MCP for tool
+        connectivity, A2A for agent interoperability</strong>. Both are open standards with
+        broad industry adoption. Both are reasonable foundations to build on today.
+      </p>
+
+      <p>
+        Above that protocol layer, tools and skills remain the unit of agent capability — and
+        plugins are how you package and distribute workflows worth reusing. The vocabulary is
+        settling. The underlying architecture is real, and it's being deployed in production
+        at scale.
+      </p>
+
+      <blockquote>
+        Invest in MCP servers (your work is portable), understand A2A deeply (it's where
+        multi-agent systems are heading), and treat skills as your competitive moat — they're
+        where domain expertise lives.
+      </blockquote>
+
+      <!-- Sources -->
+      <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border);" />
+      <p style="font-size: 0.82rem; color: var(--text-muted);">
+        <strong>Sources:</strong>
+        <a href="https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/" target="_blank" rel="noopener">Google A2A Announcement</a> ·
+        <a href="https://a2a-protocol.org/latest/specification/" target="_blank" rel="noopener">A2A Specification</a> ·
+        <a href="https://github.com/a2aproject/A2A" target="_blank" rel="noopener">A2A GitHub</a> ·
+        <a href="https://www.ibm.com/think/topics/agent2agent-protocol" target="_blank" rel="noopener">IBM on A2A</a> ·
+        <a href="https://www.linuxfoundation.org/press/a2a-protocol-surpasses-150-organizations-lands-in-major-cloud-platforms-and-sees-enterprise-production-use-in-first-year" target="_blank" rel="noopener">Linux Foundation — A2A reaches 150 orgs</a>
+      </p>
+
+    </div><!-- /.post-body -->
+
+    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+      <a href="index.html" class="btn btn--ghost">← Back to all posts</a>
+    </div>
+
+  </article>
+
+  <!-- ── Newsletter ── -->
+  <div class="container">
+    <section class="newsletter" aria-label="Newsletter signup">
+      <h2>Enjoyed this post?</h2>
+      <p>Subscribe to get new experiments and breakdowns straight to your inbox.</p>
+      <form class="newsletter__form" id="newsletter-form" novalidate>
+        <input class="newsletter__input" type="email" placeholder="you@example.com"
+               aria-label="Email address" required />
+        <button class="btn btn--primary" type="submit">Subscribe</button>
+      </form>
+      <div class="toast" id="newsletter-toast">✓ You're in — thanks for subscribing!</div>
+    </section>
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <p>© 2026 Lorenzo Bartolo · <a href="about.html">About</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

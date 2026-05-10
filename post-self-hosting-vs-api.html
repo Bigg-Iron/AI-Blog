@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API vs Self-Hosting: A Real Cost Analysis — AI Navigator</title>
+  <meta name="description" content="When does running your own LLM on a cloud GPU actually beat managed APIs? We crunched a real GCP quote and the break-even math is surprising." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    /* ── Callout boxes ── */
+    .callout {
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      border-left: 3px solid;
+    }
+    .callout--warning { background: #fffbeb; border-color: #d97706; color: #92400e; }
+    .callout--info    { background: var(--accent-light); border-color: var(--accent); color: #1e40af; }
+    .callout--success { background: #f0fdf4; border-color: #16a34a; color: #14532d; }
+    .callout--danger  { background: #fef2f2; border-color: #dc2626; color: #7f1d1d; }
+    .callout strong   { font-weight: 700; }
+
+    /* ── GCP Quote card ── */
+    .quote-card {
+      border: 1px solid var(--border);
+      border-top: 3px solid #16a34a;
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      background: var(--bg-subtle);
+    }
+    .quote-card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .quote-card__title { font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .quote-card__meta  { font-size: 0.8rem; color: var(--text-muted); line-height: 1.8; }
+    .quote-card__total-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); }
+    .quote-card__total-val   { font-size: 2rem; font-weight: 700; color: #16a34a; line-height: 1.1; }
+    .quote-card__total-sub   { font-size: 0.78rem; color: var(--text-muted); }
+
+    /* ── Cost bar rows ── */
+    .cost-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+    .cost-row:last-child { border-bottom: none; }
+    .cost-row__label { flex: 1; color: var(--text-muted); }
+    .cost-row__label strong { color: var(--text); display: block; }
+    .cost-row__bar-wrap { width: 120px; flex-shrink: 0; }
+    .cost-row__bar-track { height: 8px; background: var(--tag-bg); border-radius: 999px; overflow: hidden; }
+    .cost-row__bar-fill  { height: 100%; border-radius: 999px; }
+    .cost-row__val { width: 70px; text-align: right; font-weight: 600; flex-shrink: 0; }
+    .cost-row__pct { width: 42px; text-align: right; font-size: 0.78rem; color: var(--text-muted); flex-shrink: 0; }
+    .bar--gpu  { background: #16a34a; }
+    .bar--disk { background: #d97706; }
+    .bar--cpu  { background: #2563eb; }
+    .bar--ram  { background: #9333ea; }
+
+    /* ── Break-even zones ── */
+    .breakeven-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .be-card {
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      border: 1px solid var(--border);
+      border-bottom: 3px solid;
+      background: var(--bg-subtle);
+    }
+    .be-card--green { border-bottom-color: #16a34a; }
+    .be-card--amber { border-bottom-color: #d97706; }
+    .be-card--red   { border-bottom-color: #dc2626; }
+    .be-card__vol   { font-size: 1.3rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.5rem; }
+    .be-card__desc  { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.75rem; }
+    .be-card__verdict { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+    .be-card--green .be-card__verdict { color: #16a34a; }
+    .be-card--amber .be-card__verdict { color: #d97706; }
+    .be-card--red   .be-card__verdict { color: #dc2626; }
+
+    /* ── Decision matrix ── */
+    .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+    .matrix-table th {
+      background: var(--bg-subtle);
+      padding: 0.65rem 1rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      border-bottom: 2px solid var(--border);
+    }
+    .matrix-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .matrix-table tr:last-child td { border-bottom: none; }
+    .matrix-table tr:hover td { background: var(--bg-subtle); }
+    .matrix-table .dim { font-weight: 600; color: var(--text); }
+    .matrix-table .dim-note { font-size: 0.78rem; color: var(--text-muted); display: block; margin-top: 0.15rem; }
+    .win-api  { color: #16a34a; font-weight: 600; }
+    .win-self { color: #2563eb; font-weight: 600; }
+    .neutral  { color: var(--text-muted); }
+    .cell-note { font-size: 0.78rem; color: var(--text-muted); display: block; margin-top: 0.2rem; font-weight: 400; }
+
+    /* ── Pros / Cons ── */
+    .pro-con-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .pro-con-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      background: var(--bg-subtle);
+    }
+    .pro-con-card__title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .pro-api  .pro-con-card__title { color: #16a34a; }
+    .con-api  .pro-con-card__title { color: #dc2626; }
+    .pro-self .pro-con-card__title { color: #2563eb; }
+    .con-self .pro-con-card__title { color: #dc2626; }
+    .pc-item { display: flex; gap: 0.6rem; margin-bottom: 0.7rem; font-size: 0.86rem; align-items: flex-start; }
+    .pc-item:last-child { margin-bottom: 0; }
+    .pc-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .pro-api  .pc-dot { background: #16a34a; }
+    .con-api  .pc-dot { background: #dc2626; }
+    .pro-self .pc-dot { background: #2563eb; }
+    .con-self .pc-dot { background: #dc2626; }
+    .pc-text { color: var(--text-muted); line-height: 1.55; }
+    .pc-text strong { color: var(--text); }
+
+    /* ── Stat grid ── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .stat-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      background: var(--bg-subtle);
+    }
+    .stat-card__label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); margin-bottom: 0.35rem; }
+    .stat-card__value { font-size: 1.4rem; font-weight: 700; color: var(--text); line-height: 1.1; }
+    .stat-card__sub   { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem; }
+    .stat-card--green  .stat-card__value { color: #16a34a; }
+    .stat-card--amber  .stat-card__value { color: #d97706; }
+    .stat-card--red    .stat-card__value { color: #dc2626; }
+    .stat-card--accent .stat-card__value { color: var(--accent); }
+
+    @media (max-width: 640px) {
+      .breakeven-grid { grid-template-columns: 1fr; }
+      .pro-con-grid   { grid-template-columns: 1fr; }
+      .quote-card__header { flex-direction: column; }
+      .cost-row__bar-wrap { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <span class="nav__logo-dot"></span>
+        AI Navigator
+      </a>
+      <ul class="nav__links">
+        <li><a href="index.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Post ── -->
+  <article class="post-layout">
+
+    <header class="post-header">
+      <div class="post-header__tags">
+        <span class="tag tag--data">Data</span>
+        <span class="tag tag--experiments">Experiments</span>
+      </div>
+      <h1 class="post-header__title">
+        API vs Self-Hosting: A Real-World<br />Cost Analysis for 2026
+      </h1>
+      <div class="post-header__meta">
+        <span>Lorenzo Bartolo</span>
+        <span>·</span>
+        <span>8 May 2026</span>
+        <span>·</span>
+        <span>10 min read</span>
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      <p>
+        "Why are we paying so much per token when we could just run our own model?" It's a
+        question every engineering team hits once their AI bill starts to sting. The answer
+        is almost always more complicated than it looks — and the break-even point is usually
+        much further out than people expect.
+      </p>
+
+      <p>
+        In this post I'm going to walk through the actual numbers: a verified GCP pricing
+        quote, a full TCO breakdown for a self-hosted setup, and the utilisation thresholds
+        where self-hosting genuinely starts to win. There's also a decision matrix at the
+        end if you just want the bottom line.
+      </p>
+
+      <h2>The Critical Distinction Nobody Mentions</h2>
+
+      <div class="callout callout--warning">
+        <strong>You can't self-host Claude, GPT-5 or Gemini Pro.</strong> Their weights are
+        proprietary and never released. "Self-hosting" means running <strong>open-weight
+        models</strong> — Llama 4, DeepSeek V4, Mistral, etc. — on cloud GPU VMs. These are
+        genuinely competitive, but they are not identical to frontier closed models. This is
+        a capability trade-off, not just a cost trade-off.
+      </div>
+
+      <p>
+        This distinction matters enormously for the analysis. You're not comparing the same
+        thing at a different price — you're comparing a managed frontier model against a
+        self-managed open-weight model. For many workloads that's fine. For others (hard
+        reasoning, complex agents, nuanced instruction following) the capability gap is real.
+      </p>
+
+      <h2>What Cloud GPU VMs Actually Cost</h2>
+
+      <p>
+        Cloud GPU pricing is a wide spectrum. The chart below shows monthly on-demand cost
+        for representative GPU configurations across providers, running 24/7.
+      </p>
+
+      <div class="chart-wrap">
+        <div class="chart-wrap__title">Monthly GPU VM cost (on-demand, 24×7) — USD</div>
+        <canvas id="chart-gpu-costs"></canvas>
+      </div>
+
+      <p>
+        There's enormous variance here — from ~$618/month for a single L4 GPU on GCP to
+        $20,000+ for an 8× H100 cluster. What you need depends almost entirely on the size
+        of the model you want to run. A Llama 3.2 7B fits comfortably in fp16 on a single
+        L4 (24 GB VRAM). A Llama 4 Maverick 70B needs two H100s. DeepSeek V4 671B needs
+        eight.
+      </p>
+
+      <h2>A Real GCP Quote (Verified May 8, 2026)</h2>
+
+      <p>
+        Rather than using estimates, I'm working from an actual GCP Pricing Calculator export
+        for the smallest GPU configuration worth running an LLM on: a <strong>g2-standard-4
+        instance with one NVIDIA L4 GPU</strong> in us-central1.
+      </p>
+
+      <div class="quote-card">
+        <div class="quote-card__header">
+          <div>
+            <div class="quote-card__title">GCP Compute Engine · g2-standard-4 · 1× NVIDIA L4</div>
+            <div class="quote-card__meta">
+              Region: us-central1 (Iowa) &nbsp;·&nbsp;
+              4 vCPUs &nbsp;·&nbsp; 16 GB RAM &nbsp;·&nbsp; 1× L4 GPU (24 GB GDDR6) &nbsp;·&nbsp; 1 TiB Balanced PD<br />
+              730 hrs/month on-demand &nbsp;·&nbsp; Prices as of 2026-05-08
+            </div>
+          </div>
+          <div style="text-align: right; flex-shrink: 0;">
+            <div class="quote-card__total-label">Monthly Total</div>
+            <div class="quote-card__total-val">$618.39</div>
+            <div class="quote-card__total-sub">730 hrs · on-demand</div>
+          </div>
+        </div>
+
+        <!-- Cost rows -->
+        <div class="cost-row">
+          <div class="cost-row__label">
+            <strong>NVIDIA L4 GPU</strong>
+            Running in Americas
+          </div>
+          <div class="cost-row__bar-wrap">
+            <div class="cost-row__bar-track"><div class="cost-row__bar-fill bar--gpu" style="width:66.1%"></div></div>
+          </div>
+          <div class="cost-row__val" style="color:#16a34a;">$408.83</div>
+          <div class="cost-row__pct">66.1%</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-row__label">
+            <strong>Balanced PD (1 TiB)</strong>
+            Persistent disk storage
+          </div>
+          <div class="cost-row__bar-wrap">
+            <div class="cost-row__bar-track"><div class="cost-row__bar-fill bar--disk" style="width:16.6%"></div></div>
+          </div>
+          <div class="cost-row__val" style="color:#d97706;">$102.40</div>
+          <div class="cost-row__pct">16.6%</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-row__label">
+            <strong>G2 Instance Core</strong>
+            4 vCPUs · Americas
+          </div>
+          <div class="cost-row__bar-wrap">
+            <div class="cost-row__bar-track"><div class="cost-row__bar-fill bar--cpu" style="width:11.8%"></div></div>
+          </div>
+          <div class="cost-row__val" style="color:#2563eb;">$72.97</div>
+          <div class="cost-row__pct">11.8%</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-row__label">
+            <strong>G2 Instance RAM</strong>
+            16 GB · Americas
+          </div>
+          <div class="cost-row__bar-wrap">
+            <div class="cost-row__bar-track"><div class="cost-row__bar-fill bar--ram" style="width:5.5%"></div></div>
+          </div>
+          <div class="cost-row__val" style="color:#9333ea;">$34.19</div>
+          <div class="cost-row__pct">5.5%</div>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card stat-card--accent">
+          <div class="stat-card__label">GPU share of bill</div>
+          <div class="stat-card__value">66.1%</div>
+          <div class="stat-card__sub">The GPU is the dominant cost, not the server</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">L4 VRAM</div>
+          <div class="stat-card__value">24 GB</div>
+          <div class="stat-card__sub">Fits 7B in fp16 or 13B in 4-bit quantisation</div>
+        </div>
+        <div class="stat-card stat-card--green">
+          <div class="stat-card__label">Spot discount potential</div>
+          <div class="stat-card__value">60–91%</div>
+          <div class="stat-card__sub">Could drop this to ~$70–250/mo for batch work</div>
+        </div>
+        <div class="stat-card stat-card--amber">
+          <div class="stat-card__label">Storage is #2 cost</div>
+          <div class="stat-card__value">$102/mo</div>
+          <div class="stat-card__sub">Right-size disk if you don't need 1 TiB</div>
+        </div>
+      </div>
+
+      <h2>So What Does That Buy You in Tokens?</h2>
+
+      <p>
+        The honest answer: not enough to beat managed APIs on a small single-GPU setup.
+        Here's the effective cost per 1M tokens at different utilisation rates for models
+        that fit on a single L4:
+      </p>
+
+      <div class="table-wrap">
+        <table class="data-table" id="token-cost-table">
+          <thead>
+            <tr>
+              <th data-col="model">Model</th>
+              <th data-col="throughput">Est. Throughput</th>
+              <th data-col="util40">@ 40% util</th>
+              <th data-col="util60">@ 60% util</th>
+              <th data-col="util80">@ 80% util</th>
+              <th data-col="vs">vs Managed API</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-col="model">Llama 3.2 7B (fp16)</td>
+              <td data-col="throughput">~220 tok/sec</td>
+              <td data-col="util40" data-val="2.68" style="color:#dc2626;font-weight:600;">$2.68/1M</td>
+              <td data-col="util60" data-val="1.78">$1.78/1M</td>
+              <td data-col="util80" data-val="1.34" style="color:#16a34a;font-weight:600;">$1.34/1M</td>
+              <td data-col="vs"><span style="color:#dc2626;font-size:0.82rem;">API wins — Haiku input is $1.00, Flash-Lite $0.10</span></td>
+            </tr>
+            <tr>
+              <td data-col="model">Mistral 7B / Phi-3 (4-bit)</td>
+              <td data-col="throughput">~350 tok/sec</td>
+              <td data-col="util40" data-val="1.68" style="color:#dc2626;font-weight:600;">$1.68/1M</td>
+              <td data-col="util60" data-val="1.12" style="color:#16a34a;font-weight:600;">$1.12/1M</td>
+              <td data-col="util80" data-val="0.84" style="color:#16a34a;font-weight:600;">$0.84/1M</td>
+              <td data-col="vs"><span style="color:#d97706;font-size:0.82rem;">Near Haiku input rate — but Haiku output is $5/1M vs your $0.84</span></td>
+            </tr>
+            <tr>
+              <td data-col="model">Llama 3.1 13B (4-bit)</td>
+              <td data-col="throughput">~120 tok/sec</td>
+              <td data-col="util40" data-val="4.91" style="color:#dc2626;font-weight:600;">$4.91/1M</td>
+              <td data-col="util60" data-val="3.27" style="color:#dc2626;font-weight:600;">$3.27/1M</td>
+              <td data-col="util80" data-val="2.45">$2.45/1M</td>
+              <td data-col="vs"><span style="color:#dc2626;font-size:0.82rem;">API wins — Claude Sonnet input is $3.00 with better capability</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--danger">
+        <strong>Key finding:</strong> At the L4 / 7B–13B tier, self-hosting on GCP
+        on-demand <em>does not beat managed APIs on pure cost</em>. Gemini Flash-Lite
+        ($0.10/$0.40) and Claude Haiku ($1.00/$5.00) are simply cheaper per token at any
+        realistic utilisation rate. The L4 path makes sense for data privacy, fine-tuned
+        domain models, or latency-critical on-prem deployments — not cost optimisation.
+      </div>
+
+      <h2>The True Cost of a Serious Self-Hosted Setup</h2>
+
+      <p>
+        To get to competitive cost-per-token with frontier APIs, you need to move up to
+        70B-class models on multi-H100 hardware. And that means a very different cost
+        structure. Here's a realistic monthly TCO for an 8× H100 cluster on GCP running
+        a 70B model at 60%+ utilisation:
+      </p>
+
+      <div class="chart-wrap">
+        <div class="chart-wrap__title">Monthly TCO breakdown — self-hosted 8× H100 cluster (~$31,300/mo)</div>
+        <canvas id="chart-tco"></canvas>
+      </div>
+
+      <p>
+        The line item most people miss is <strong>engineering labour</strong>. A capable
+        inference engineer — someone who can manage vLLM, handle CUDA dependencies, tune
+        batching configs, and keep 99.9% uptime — costs $150–200K/year fully loaded.
+        At 0.5 FTE that's $8,000/month, before you've touched a single GPU.
+      </p>
+
+      <div class="callout callout--warning">
+        <strong>The reserved capacity trap:</strong> Committing to a 1-year reserved GPU
+        contract before your volume is confirmed is one of the most common failure modes.
+        Teams over-provision at full reserved rates and end up spending more than they would
+        have on managed APIs, with less flexibility and more operational overhead.
+      </div>
+
+      <h2>Break-Even Thresholds</h2>
+
+      <p>
+        So when <em>does</em> self-hosting make financial sense? The honest answer depends
+        on utilisation, model size, and whether you're counting engineer cost. Here's the
+        rough framework:
+      </p>
+
+      <div class="breakeven-grid">
+        <div class="be-card be-card--green">
+          <div class="be-card__vol">&lt; 35M tok/mo</div>
+          <div class="be-card__desc">
+            Managed API clearly wins. Engineering overhead to maintain a
+            self-hosted cluster exceeds any per-token savings. No GPU
+            reservation makes sense yet.
+          </div>
+          <div class="be-card__verdict">✓ Use managed API</div>
+        </div>
+        <div class="be-card be-card--amber">
+          <div class="be-card__vol">35M – 600M tok/mo</div>
+          <div class="be-card__desc">
+            Grey zone. Self-hosting 70B models may approach parity with
+            Sonnet / Gemini 2.5 Pro — but engineer cost and idle GPU waste
+            usually cancel the savings. Evaluate carefully per workload.
+          </div>
+          <div class="be-card__verdict">⚖ Evaluate case-by-case</div>
+        </div>
+        <div class="be-card be-card--red">
+          <div class="be-card__vol">&gt; 600M tok/mo</div>
+          <div class="be-card__desc">
+            Self-hosting starts to win materially — 50%+ cheaper than
+            frontier APIs for code-completion at 600M+ and chat at 1.2B+
+            (including engineer cost). Reserved GPU capacity accelerates ROI.
+          </div>
+          <div class="be-card__verdict">✓ Self-hosting wins</div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <div class="chart-wrap__title">Monthly cost: self-hosted 70B (2× H100) vs Claude Sonnet 4.6 API</div>
+        <canvas id="chart-breakeven"></canvas>
+      </div>
+
+      <p>
+        The chart above illustrates the crossover point. The self-hosted fixed cost
+        (hardware + engineering overhead) looks expensive at low volume, but the API line
+        has a steeper slope — and beyond roughly 200–300M tokens/month for a 2× H100
+        setup, the lines cross.
+      </p>
+
+      <h2>Pros &amp; Cons — The Full Picture</h2>
+
+      <div class="pro-con-grid">
+        <div class="pro-con-card pro-api">
+          <div class="pro-con-card__title">✓ Managed API — Advantages</div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Zero infrastructure ops.</strong> No GPU provisioning, driver updates, CUDA mismatches, or cluster outages.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Frontier model access.</strong> Claude Opus 4.7, GPT-5.2, Gemini 3.1 Pro — not available as open weights, ever.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Instant elasticity.</strong> Scale from zero to millions of tokens per minute in seconds, no capacity planning needed.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Caching &amp; batch economics.</strong> Stacking both discounts can cut effective cost by up to 95% on eligible workloads.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Low startup cost.</strong> Pay only for usage — ideal for early-stage products and variable-volume applications.</div></div>
+        </div>
+        <div class="pro-con-card con-api">
+          <div class="pro-con-card__title">✗ Managed API — Disadvantages</div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Data leaves your perimeter.</strong> All prompts transit provider servers — problematic for HIPAA, GDPR, legal, and sensitive IP.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Rate limits &amp; quotas.</strong> Hard limits on requests per minute that can block production traffic without advance notice.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>No weight-level customisation.</strong> No fine-tuning, no LoRA adapters, no custom system behaviour beyond prompting.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Tokeniser risk.</strong> Model updates can silently raise your bill — Opus 4.7's 35% tokeniser shift is a recent example.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Vendor dependency.</strong> Pricing, availability, and behaviour can change with limited notice.</div></div>
+        </div>
+        <div class="pro-con-card pro-self">
+          <div class="pro-con-card__title">✓ Self-Hosted — Advantages</div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Data sovereignty.</strong> All inference stays inside your VPC. Critical for regulated industries.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Fixed monthly cost.</strong> Predictable spend at high volume — no surprise bill from a verbose model.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Full customisation.</strong> Fine-tune with LoRA/QLoRA, run domain-specific adapters, modify system behaviour at the weights level.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>No external latency.</strong> Eliminates WAN round-trips — critical for sub-100ms P99 targets.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>No rate limits.</strong> Throughput is bounded only by your cluster capacity, not a quota policy.</div></div>
+        </div>
+        <div class="pro-con-card con-self">
+          <div class="pro-con-card__title">✗ Self-Hosted — Disadvantages</div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Capability gap.</strong> Llama 4, DeepSeek V4 are competitive — but not identical to Claude Opus 4.7 on hard reasoning tasks.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>High operational overhead.</strong> Requires specialised MLOps talent (~$12–17K/month for 0.5 FTE). The #1 reason self-hosting fails.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Idle GPU waste.</strong> A cluster at 20% utilisation costs 5× the effective rate of a well-provisioned one.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>Slow setup.</strong> Provisioning, stack tuning (vLLM / SGLang), and load testing takes weeks. High commitment before ROI is proven.</div></div>
+          <div class="pc-item"><div class="pc-dot"></div><div class="pc-text"><strong>No access to latest models.</strong> You track the open-weight release cycle, which typically lags frontier closed models by months.</div></div>
+        </div>
+      </div>
+
+      <h2>Decision Matrix</h2>
+
+      <p>
+        Here's the bottom-line guide. Tick the boxes that match your situation:
+      </p>
+
+      <div class="table-wrap">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th style="width:32%">Dimension</th>
+              <th style="width:34%">Managed API</th>
+              <th style="width:34%">Self-Hosted VM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="dim">Volume &lt; 35M tok/mo</span><span class="dim-note">Early-stage, variable load</span></td>
+              <td><span class="win-api">✓ Clear winner</span><span class="cell-note">No fixed overhead; pay per use</span></td>
+              <td><span class="neutral">✗ Doesn't make sense</span><span class="cell-note">Engineer cost alone exceeds API bill</span></td>
+            </tr>
+            <tr>
+              <td><span class="dim">Volume &gt; 600M tok/mo</span><span class="dim-note">High-volume production</span></td>
+              <td><span class="neutral">○ Viable with caching</span><span class="cell-note">Batch + cache discounts narrow the gap</span></td>
+              <td><span class="win-self">✓ 50%+ cheaper</span><span class="cell-note">Fixed infra cost amortised across volume</span></td>
+            </tr>
+            <tr>
+              <td><span class="dim">Data Privacy / HIPAA</span><span class="dim-note">Regulated industry</span></td>
+              <td><span class="neutral">○ Private deployment</span><span class="cell-note">Available via Bedrock / Vertex private VPC</span></td>
+              <td><span class="win-self">✓ Best for compliance</span><span class="cell-note">Data never leaves your perimeter</span></td>
+            </tr>
+            <tr>
+              <td><span class="dim">Maximum model quality</span><span class="dim-note">Hard reasoning tasks</span></td>
+              <td><span class="win-api">✓ Closed API only</span><span class="cell-note">Opus 4.7, GPT-5.2 not available as open weights</span></td>
+              <td><span class="neutral">○ Competitive but behind</span><span class="cell-note">Llama 4 / DeepSeek V4 trail on complex tasks</span></td>
+            </tr>
+            <tr>
+              <td><span class="dim">Fine-tuning / customisation</span><span class="dim-note">Domain adapters, LoRA</span></td>
+              <td><span class="neutral">✗ Not available</span><span class="cell-note">System prompt only; no weight access</span></td>
+              <td><span class="win-self">✓ Full LoRA / QLoRA</span><span class="cell-note">Domain adaptation, custom adapters</span></td>
+            </tr>
+            <tr>
+              <td><span class="dim">Latency (P99 &lt; 100ms)</span><span class="dim-note">Realtime applications</span></td>
+              <td><span class="neutral">○ Depends on load</span><span class="cell-note">WAN + queuing adds 50–300ms typically</span></td>
+              <td><span class="win-self">✓ Same-VPC advantage</span><span class="cell-note">Eliminates network hop; deterministic</span></td>
+            </tr>
+            <tr>
+              <td><span class="dim">Speed to production</span><span class="dim-note">Time-to-value matters</span></td>
+              <td><span class="win-api">✓ Hours</span><span class="cell-note">API key → working app in a day</span></td>
+              <td><span class="neutral">✗ Weeks to months</span><span class="cell-note">Cluster setup, stack tuning, load testing</span></td>
+            </tr>
+            <tr>
+              <td><span class="dim">Cost predictability</span><span class="dim-note">Fixed budgets</span></td>
+              <td><span class="neutral">○ Variable; tokeniser risk</span><span class="cell-note">Model updates can silently change bill</span></td>
+              <td><span class="win-self">✓ Fixed monthly cost</span><span class="cell-note">Budgeting is straightforward at scale</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>The 2026 Dominant Pattern</h2>
+
+      <p>
+        The architecture that's winning in 2026 isn't a binary choice. Most production teams
+        with significant AI spend are running a <strong>hybrid</strong>:
+      </p>
+
+      <ul>
+        <li>
+          <strong>Self-hosted open-weight model</strong> (Llama 4 Maverick or similar) for
+          the 90–95% of requests that are high-volume and routine — code completion,
+          classification, extraction, summarisation.
+        </li>
+        <li>
+          <strong>Closed API fallback</strong> (Claude Opus or GPT-5) for the hard 5–10%
+          that requires genuine reasoning capability — edge cases, complex instructions,
+          multi-step agents.
+        </li>
+      </ul>
+
+      <p>
+        This pattern combines the cost efficiency of self-hosting at volume with the
+        ceiling-raising capability of frontier closed models where it actually matters.
+        The routing logic between them is usually straightforward — task complexity
+        scoring, fallback on low confidence, or explicit task categorisation.
+      </p>
+
+      <blockquote>
+        The question isn't "API or self-hosted?" — it's "which tier of request goes where?"
+        The teams winning on AI unit economics in 2026 are the ones who've answered
+        that question per workload, not per company.
+      </blockquote>
+
+    </div><!-- /.post-body -->
+
+    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+      <a href="index.html" class="btn btn--ghost">← Back to all posts</a>
+    </div>
+
+  </article>
+
+  <!-- ── Newsletter ── -->
+  <div class="container">
+    <section class="newsletter" aria-label="Newsletter signup">
+      <h2>Enjoyed this post?</h2>
+      <p>Subscribe to get new experiments and breakdowns straight to your inbox.</p>
+      <form class="newsletter__form" id="newsletter-form" novalidate>
+        <input class="newsletter__input" type="email" placeholder="you@example.com"
+               aria-label="Email address" required />
+        <button class="btn btn--primary" type="submit">Subscribe</button>
+      </form>
+      <div class="toast" id="newsletter-toast">✓ You're in — thanks for subscribing!</div>
+    </section>
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <p>© 2026 Lorenzo Bartolo · <a href="about.html">About</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      // 1. Sortable token cost table
+      initSortableTable("token-cost-table");
+
+      // 2. GPU VM monthly costs (on-demand)
+      buildBarChart("chart-gpu-costs", {
+        labels: [
+          "GCP L4 (1×)",
+          "Lambda H100 (1×)",
+          "Hyperbolic H100 (1×)",
+          "GCP A100 80GB",
+          "GCP H100 (1×)",
+          "Spheron B200 (spot)",
+          "CoreWeave H100 (8×)",
+          "GCP H100 (8×)"
+        ],
+        datasets: [{
+          label: "Monthly cost (USD)",
+          data: [618, 1332, 1073, 2640, 2160, 1527, 12000, 18000],
+          backgroundColor: [
+            "#16a34a","#16a34a","#16a34a",
+            "#d97706","#d97706",
+            "#9333ea","#9333ea",
+            "#dc2626"
+          ],
+        }],
+      });
+
+      // 3. TCO doughnut → use bar instead for consistency
+      buildBarChart("chart-tco", {
+        labels: ["GPU Cluster (8× H100)", "MLOps Engineer (0.5 FTE)", "Networking & Egress", "Storage", "Tooling"],
+        datasets: [{
+          label: "Monthly cost (USD)",
+          data: [22000, 8000, 800, 300, 200],
+          backgroundColor: ["#2563eb","#ef4444","#d97706","#16a34a","#9333ea"],
+        }],
+      });
+
+      // 4. Break-even chart — API vs self-hosted as volume scales
+      const volumes = [10, 50, 100, 200, 300, 500, 700, 1000]; // millions of tokens/month
+      const apiCost    = volumes.map(v => v * 3.00);  // Claude Sonnet at $3/1M input
+      const selfCost   = volumes.map(() => 10800);    // 2× H100 reserved + 0.5 FTE engineer
+
+      buildLineChart("chart-breakeven", {
+        labels: volumes.map(v => v + "M"),
+        datasets: [
+          {
+            label: "Claude Sonnet 4.6 API ($3/1M tokens)",
+            data: apiCost,
+            borderColor: "#2563eb",
+            fill: false,
+          },
+          {
+            label: "Self-hosted 70B / 2× H100 (fixed ~$10,800/mo)",
+            data: selfCost,
+            borderColor: "#16a34a",
+            fill: false,
+          },
+        ],
+      });
+
+    });
+  </script>
+
+</body>
+</html>

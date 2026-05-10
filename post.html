@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comparing the Top AI Assistants in 2025 — AI Navigator</title>
+  <meta name="description" content="I spent two weeks running identical prompts through GPT-4o, Claude 3.7, Gemini Advanced, and Mistral. Here's what I found — with data." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <span class="nav__logo-dot"></span>
+        AI Navigator
+      </a>
+      <ul class="nav__links">
+        <li><a href="index.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Post ── -->
+  <article class="post-layout">
+
+    <!-- Post Header -->
+    <header class="post-header">
+      <div class="post-header__tags">
+        <span class="tag tag--ai-tools">AI Tools</span>
+        <span class="tag tag--data">Data</span>
+      </div>
+      <h1 class="post-header__title">
+        Comparing the Top AI Assistants in 2025:<br />A Hands-On Breakdown
+      </h1>
+      <div class="post-header__meta">
+        <span>Lorenzo Bartolo</span>
+        <span>·</span>
+        <span>12 March 2025</span>
+        <span>·</span>
+        <span>8 min read</span>
+      </div>
+    </header>
+
+    <!-- Post Body -->
+    <div class="post-body">
+
+      <p>
+        For two weeks I ran the same 40 prompts across four major AI assistants:
+        <strong>GPT-4o</strong>, <strong>Claude 3.7 Sonnet</strong>,
+        <strong>Gemini 1.5 Pro</strong>, and <strong>Mistral Large 2</strong>.
+        The prompts covered coding, research summarisation, creative writing, reasoning,
+        and instruction following. Every output was scored blind by two independent reviewers
+        on a 1–10 scale.
+      </p>
+
+      <p>
+        The headline: no single model dominates. Each has a distinct profile of strengths and
+        weaknesses — and which one is "best" depends almost entirely on your use case.
+      </p>
+
+      <h2>Overall Scores at a Glance</h2>
+
+      <p>
+        The bar chart below shows each model's mean score across all 40 prompts.
+        Claude edges ahead on the aggregate, but the margin is thin.
+      </p>
+
+      <!-- Bar Chart: Overall scores -->
+      <div class="chart-wrap">
+        <div class="chart-wrap__title">Mean score across all tasks (out of 10)</div>
+        <canvas id="chart-overall"></canvas>
+      </div>
+
+      <h2>Capability Breakdown by Category</h2>
+
+      <p>
+        The radar chart tells the more interesting story. GPT-4o leads on coding; Claude
+        is noticeably stronger on nuanced instruction following; Gemini punches above its
+        weight on research tasks where it can lean on search grounding; Mistral is
+        surprisingly competitive for its price point.
+      </p>
+
+      <!-- Radar Chart: Category breakdown -->
+      <div class="chart-wrap">
+        <div class="chart-wrap__title">Score by category (out of 10)</div>
+        <canvas id="chart-radar"></canvas>
+      </div>
+
+      <h2>Performance Over Time</h2>
+
+      <p>
+        I also tracked whether the models performed consistently across the two-week window —
+        some had noticeable dips on days when I suspect capacity constraints were in play.
+      </p>
+
+      <!-- Line Chart: Daily performance -->
+      <div class="chart-wrap">
+        <div class="chart-wrap__title">Rolling 3-day average score</div>
+        <canvas id="chart-trend"></canvas>
+      </div>
+
+      <h2>Full Results Table</h2>
+
+      <p>
+        The sortable table below contains every category's scores.
+        Click any column header to sort. The bar inside each score cell
+        gives a quick visual reference.
+      </p>
+
+      <!-- Sortable Data Table -->
+      <div class="table-wrap">
+        <table class="data-table" id="results-table">
+          <thead>
+            <tr>
+              <th data-col="model">Model <span class="sort-icon">↕</span></th>
+              <th data-col="coding">Coding <span class="sort-icon">↕</span></th>
+              <th data-col="research">Research <span class="sort-icon">↕</span></th>
+              <th data-col="creative">Creative <span class="sort-icon">↕</span></th>
+              <th data-col="reasoning">Reasoning <span class="sort-icon">↕</span></th>
+              <th data-col="instruction">Instruction <span class="sort-icon">↕</span></th>
+              <th data-col="overall">Overall <span class="sort-icon">↕</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row helper: score + mini bar -->
+            <tr>
+              <td data-col="model" data-val="Claude 3.7 Sonnet">Claude 3.7 Sonnet</td>
+              <td data-col="coding"    data-val="8.4"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:84%"></div></div><span>8.4</span></div></td>
+              <td data-col="research"  data-val="8.1"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:81%"></div></div><span>8.1</span></div></td>
+              <td data-col="creative"  data-val="8.7"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:87%"></div></div><span>8.7</span></div></td>
+              <td data-col="reasoning" data-val="8.5"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:85%"></div></div><span>8.5</span></div></td>
+              <td data-col="instruction" data-val="9.0"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:90%"></div></div><span>9.0</span></div></td>
+              <td data-col="overall"   data-val="8.5"><strong>8.5</strong></td>
+            </tr>
+            <tr>
+              <td data-col="model" data-val="GPT-4o">GPT-4o</td>
+              <td data-col="coding"    data-val="9.1"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:91%"></div></div><span>9.1</span></div></td>
+              <td data-col="research"  data-val="7.9"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:79%"></div></div><span>7.9</span></div></td>
+              <td data-col="creative"  data-val="8.2"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:82%"></div></div><span>8.2</span></div></td>
+              <td data-col="reasoning" data-val="8.8"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:88%"></div></div><span>8.8</span></div></td>
+              <td data-col="instruction" data-val="8.3"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:83%"></div></div><span>8.3</span></div></td>
+              <td data-col="overall"   data-val="8.4"><strong>8.4</strong></td>
+            </tr>
+            <tr>
+              <td data-col="model" data-val="Gemini 1.5 Pro">Gemini 1.5 Pro</td>
+              <td data-col="coding"    data-val="7.8"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:78%"></div></div><span>7.8</span></div></td>
+              <td data-col="research"  data-val="8.9"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:89%"></div></div><span>8.9</span></div></td>
+              <td data-col="creative"  data-val="7.6"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:76%"></div></div><span>7.6</span></div></td>
+              <td data-col="reasoning" data-val="7.9"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:79%"></div></div><span>7.9</span></div></td>
+              <td data-col="instruction" data-val="7.7"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:77%"></div></div><span>7.7</span></div></td>
+              <td data-col="overall"   data-val="8.0"><strong>8.0</strong></td>
+            </tr>
+            <tr>
+              <td data-col="model" data-val="Mistral Large 2">Mistral Large 2</td>
+              <td data-col="coding"    data-val="7.5"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:75%"></div></div><span>7.5</span></div></td>
+              <td data-col="research"  data-val="7.3"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:73%"></div></div><span>7.3</span></div></td>
+              <td data-col="creative"  data-val="7.8"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:78%"></div></div><span>7.8</span></div></td>
+              <td data-col="reasoning" data-val="7.4"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:74%"></div></div><span>7.4</span></div></td>
+              <td data-col="instruction" data-val="7.6"><div class="score-bar"><div class="score-bar__track"><div class="score-bar__fill" style="width:76%"></div></div><span>7.6</span></div></td>
+              <td data-col="overall"   data-val="7.5"><strong>7.5</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>What I Actually Use Now</h2>
+
+      <p>
+        After this exercise my stack hasn't radically changed, but my allocation has shifted.
+        I now lean on Claude for anything involving writing, nuanced instruction, or long
+        context; GPT-4o for code generation inside an IDE; Gemini when I need something
+        cross-referenced with current web content.
+      </p>
+
+      <blockquote>
+        The best AI workflow isn't picking a winner — it's knowing which model to reach
+        for and why.
+      </blockquote>
+
+      <p>
+        Next up: I'll run the same suite on smaller, cheaper models to see how much
+        performance you sacrifice at the budget tier. Subscribe below so you don't miss it.
+      </p>
+
+    </div><!-- /.post-body -->
+
+    <!-- Back link -->
+    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+      <a href="index.html" class="btn btn--ghost">← Back to all posts</a>
+    </div>
+
+  </article>
+
+  <!-- ── Newsletter ── -->
+  <div class="container">
+    <section class="newsletter" aria-label="Newsletter signup">
+      <h2>Enjoyed this post?</h2>
+      <p>Subscribe to get new experiments and breakdowns straight to your inbox.</p>
+      <form class="newsletter__form" id="newsletter-form" novalidate>
+        <input class="newsletter__input" type="email" placeholder="you@example.com"
+               aria-label="Email address" required />
+        <button class="btn btn--primary" type="submit">Subscribe</button>
+      </form>
+      <div class="toast" id="newsletter-toast">✓ You're in — thanks for subscribing!</div>
+    </section>
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <p>© 2025 Lorenzo Bartolo · <a href="about.html">About</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    // ── Charts ──────────────────────────────────────────────────────────
+    document.addEventListener("DOMContentLoaded", () => {
+
+      // 1. Overall bar chart
+      buildBarChart("chart-overall", {
+        labels: ["Claude 3.7 Sonnet", "GPT-4o", "Gemini 1.5 Pro", "Mistral Large 2"],
+        datasets: [{
+          label: "Overall score",
+          data: [8.5, 8.4, 8.0, 7.5],
+          backgroundColor: ["#2563eb", "#16a34a", "#d97706", "#9333ea"],
+        }],
+      });
+
+      // 2. Radar chart
+      buildRadarChart("chart-radar", {
+        labels: ["Coding", "Research", "Creative", "Reasoning", "Instruction"],
+        datasets: [
+          { label: "Claude 3.7",    data: [8.4, 8.1, 8.7, 8.5, 9.0] },
+          { label: "GPT-4o",        data: [9.1, 7.9, 8.2, 8.8, 8.3] },
+          { label: "Gemini 1.5 Pro",data: [7.8, 8.9, 7.6, 7.9, 7.7] },
+          { label: "Mistral Large 2",data:[7.5, 7.3, 7.8, 7.4, 7.6] },
+        ],
+      });
+
+      // 3. Trend line chart
+      buildLineChart("chart-trend", {
+        labels: ["Day 1","Day 3","Day 5","Day 7","Day 9","Day 11","Day 13"],
+        datasets: [
+          { label: "Claude 3.7",    data: [8.3, 8.5, 8.4, 8.7, 8.6, 8.5, 8.5], borderColor: "#2563eb" },
+          { label: "GPT-4o",        data: [8.6, 8.4, 8.1, 8.5, 8.3, 8.4, 8.4], borderColor: "#16a34a" },
+          { label: "Gemini 1.5 Pro",data: [8.0, 8.1, 8.2, 7.8, 8.0, 7.9, 8.0], borderColor: "#d97706" },
+          { label: "Mistral Large 2",data:[7.4, 7.6, 7.5, 7.3, 7.6, 7.5, 7.5], borderColor: "#9333ea" },
+        ],
+      });
+
+      // 4. Sortable table
+      initSortableTable("results-table");
+    });
+  </script>
+
+</body>
+</html>

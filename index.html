@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Navigator — Lorenzo's AI Journey Blog</title>
+  <meta name="description" content="Honest, data-driven dispatches from someone navigating the AI landscape every day." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <span class="nav__logo-dot"></span>
+        AI Navigator
+      </a>
+      <ul class="nav__links">
+        <li><a href="index.html" class="active">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <header class="hero">
+    <div class="hero__eyebrow">A personal blog</div>
+    <h1 class="hero__title">Navigating the AI Landscape</h1>
+    <p class="hero__desc">
+      Hands-on experiments, honest takes, and data-driven dispatches from someone
+      living and working with AI every day.
+    </p>
+  </header>
+
+  <!-- ── Post Listing ── -->
+  <main class="container" style="margin-bottom: 4rem;">
+
+    <!-- Tag Filter Bar -->
+    <div class="tag-bar" id="tag-filter" role="group" aria-label="Filter posts by tag">
+      <!-- Populated by app.js -->
+    </div>
+
+    <!-- Post Grid -->
+    <div class="post-grid" id="post-grid" role="list">
+      <!-- Populated by app.js -->
+    </div>
+
+    <hr class="section-divider" />
+
+    <!-- Newsletter -->
+    <section class="newsletter" aria-label="Newsletter signup">
+      <h2>Get new posts in your inbox</h2>
+      <p>No spam — just one email when something new is published.</p>
+      <form class="newsletter__form" id="newsletter-form" novalidate>
+        <input
+          class="newsletter__input"
+          type="email"
+          placeholder="you@example.com"
+          aria-label="Email address"
+          required
+        />
+        <button class="btn btn--primary" type="submit">Subscribe</button>
+      </form>
+      <div class="toast" id="newsletter-toast">✓ You're in — thanks for subscribing!</div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <p>
+      © 2025 Lorenzo Bartolo ·
+      <a href="about.html">About</a>
+    </p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
