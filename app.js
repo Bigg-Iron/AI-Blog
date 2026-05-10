@@ -207,21 +207,120 @@ function initHomePage() {
 }
 
 // ─────────────────────────────────────────────
-// NEWSLETTER SIGNUP (UI only)
+// NEWSLETTER SIGNUP (Formspree or compatible POST endpoint)
 // ─────────────────────────────────────────────
+// 1. Create a form at https://formspree.io (free tier is enough for a personal blog).
+// 2. Copy the id from the form URL: https://formspree.io/f/abcdxyz → set formspreeId: "abcdxyz"
+//    Or set submitUrl to the full https://formspree.io/f/... URL (overrides formspreeId).
+// 3. In Formspree, confirm the form email and optionally turn off the default reCAPTCHA
+//    for a smoother UX on static sites.
+//
+// If both submitUrl and formspreeId are null, submits still “succeed” locally (toast only)
+// so the site works offline; check the browser console for a hint to wire up Formspree.
+const NEWSLETTER = {
+  submitUrl: null,
+  formspreeId: "xbdwpynw",
+  toastDurationMs: 5000,
+  submittingLabel: "Subscribing…",
+  successMessage: "✓ You're in — thanks for subscribing!",
+  /** Shown in Formspree dashboard / notification email */
+  emailSubject: "New subscriber — AI Navigator blog",
+};
+
 function initNewsletter() {
   const form = document.getElementById("newsletter-form");
   const toast = document.getElementById("newsletter-toast");
   if (!form) return;
 
-  form.addEventListener("submit", e => {
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const defaultBtnLabel = submitBtn ? submitBtn.textContent : "";
+
+  function newsletterEndpoint() {
+    if (NEWSLETTER.submitUrl) return NEWSLETTER.submitUrl.trim();
+    if (NEWSLETTER.formspreeId) {
+      const id = String(NEWSLETTER.formspreeId).trim();
+      return id ? `https://formspree.io/f/${id}` : null;
+    }
+    return null;
+  }
+
+  function showToast(message, isError) {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.toggle("toast--error", Boolean(isError));
+    toast.classList.add("show");
+    clearTimeout(showToast._hideTimer);
+    showToast._hideTimer = setTimeout(() => {
+      toast.classList.remove("show");
+      toast.classList.remove("toast--error");
+    }, NEWSLETTER.toastDurationMs);
+  }
+
+  form.addEventListener("submit", async e => {
     e.preventDefault();
-    const input = form.querySelector("input[type=email]");
-    if (!input.value) return;
-    input.value = "";
-    if (toast) {
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 4000);
+    const input = form.querySelector('input[type="email"], input[name="email"]');
+    if (!input) return;
+    if (!input.checkValidity()) {
+      input.reportValidity();
+      return;
+    }
+    const email = input.value.trim();
+    if (!email) return;
+
+    const url = newsletterEndpoint();
+    if (!url) {
+      console.info(
+        "[Newsletter] Set NEWSLETTER.formspreeId or NEWSLETTER.submitUrl in app.js to send signups to Formspree."
+      );
+      input.value = "";
+      showToast(NEWSLETTER.successMessage, false);
+      return;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = NEWSLETTER.submittingLabel;
+    }
+
+    try {
+      const fd = new FormData();
+      fd.append("email", email);
+      fd.append("_subject", NEWSLETTER.emailSubject);
+
+      const res = await fetch(url, {
+        method: "POST",
+        body: fd,
+        headers: { Accept: "application/json" },
+      });
+
+      let data = {};
+      try {
+        data = await res.json();
+      } catch {
+        /* non-JSON body */
+      }
+
+      if (res.ok) {
+        input.value = "";
+        showToast(NEWSLETTER.successMessage, false);
+      } else {
+        const errMsg =
+          (typeof data.error === "string" && data.error) ||
+          (data.errors &&
+            Object.values(data.errors)
+              .flat()
+              .filter(Boolean)
+              .join(" ")) ||
+          `Something went wrong (${res.status}). Try again later.`;
+        showToast(errMsg, true);
+      }
+    } catch {
+      showToast("Network error — check your connection and try again.", true);
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = defaultBtnLabel;
+      }
     }
   });
 }
