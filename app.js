@@ -8,6 +8,8 @@
 // Each post: { id, title, date, excerpt, tags, readTime, href }
 // ─────────────────────────────────────────────
 const POSTS = [
+  // ── Placeholder posts (no article page yet) ──────────────────────────────
+  /*
   {
     id: 1,
     title: "Comparing the Top AI Assistants in 2025: A Hands-On Breakdown",
@@ -68,6 +70,8 @@ const POSTS = [
     readTime: "5 min read",
     href: "#",
   },
+  */
+  // ── Published articles ────────────────────────────────────────────────────
   {
     id: 7,
     title: "2026 AI API Pricing Breakdown: Claude, Gemini, GPT-5 & Grok Compared",
