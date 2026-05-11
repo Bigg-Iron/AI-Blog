@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Rise of Local AI: How On-Device Models Are Reshaping the Landscape — AI Navigator</title>
+  <meta name="description" content="Cloud AI still dominates the headlines, but local models are quietly winning the infrastructure war. A macro look at why local AI is rising, who's driving it, and what it means for the industry." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Callout boxes ── */
+    .callout {
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      border-left: 3px solid;
+    }
+    .callout--info {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: #1e40af;
+    }
+    .callout--tip {
+      background: #f0fdf4;
+      border-color: #16a34a;
+      color: #14532d;
+    }
+    .callout--warning {
+      background: #fffbeb;
+      border-color: #d97706;
+      color: #92400e;
+    }
+    .callout strong { font-weight: 700; }
+
+    /* ── Comparison tables ── */
+    .cmp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 1.5rem 0;
+    }
+    .cmp-table th {
+      background: var(--bg-subtle);
+      padding: 0.65rem 0.9rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .cmp-table td {
+      padding: 0.75rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: top;
+      line-height: 1.55;
+    }
+    .cmp-table tr:last-child td { border-bottom: none; }
+    .cmp-table tr:hover td { background: var(--bg-subtle); }
+    .cmp-table td:first-child { font-weight: 600; white-space: nowrap; }
+
+    /* ── Driver cards ── */
+    .driver-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.75rem 0;
+    }
+    @media (max-width: 560px) {
+      .driver-grid { grid-template-columns: 1fr; }
+    }
+    .driver-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem;
+      background: var(--bg-subtle);
+    }
+    .driver-card__icon {
+      width: 32px;
+      height: 32px;
+      margin-bottom: 0.6rem;
+      color: var(--accent);
+    }
+    .driver-card__title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+    }
+    .driver-card__body {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Chart container ── */
+    .chart-wrap {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.25rem 1rem;
+      margin: 1.75rem 0;
+    }
+    .chart-wrap__title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      margin-bottom: 0.9rem;
+    }
+    .chart-wrap canvas {
+      max-height: 260px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <span class="nav__logo-dot"></span>
+        AI Navigator
+      </a>
+      <ul class="nav__links">
+        <li><a href="index.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Post ── -->
+  <article class="post-layout">
+
+    <header class="post-header">
+      <div class="post-header__tags">
+        <span class="tag tag--ai-tools">AI Tools</span>
+        <span class="tag tag--data">Data</span>
+      </div>
+      <h1 class="post-header__title">
+        The Rise of Local AI:<br />How On-Device Models Are Reshaping the Landscape
+      </h1>
+      <div class="post-header__meta">
+        <span>Lorenzo Bartolo</span>
+        <span>·</span>
+        <span>10 May 2026</span>
+        <span>·</span>
+        <span>9 min read</span>
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      <p>
+        For the past four years, the dominant narrative in AI has been a cloud story. The biggest
+        models live on the biggest servers, accessed via API, priced per token. You bring the
+        prompt; a data centre somewhere brings the compute. That model works well — until it
+        doesn't: until latency matters, until the data is sensitive, until the API bill arrives,
+        until the internet goes down.
+      </p>
+
+      <p>
+        Quietly, and then suddenly, a different model is gaining ground. Local AI — models that
+        run entirely on your own hardware, with no cloud round-trip, no API key, and no data
+        leaving your machine — has crossed a credibility threshold in 2026. This isn't about
+        tinkerers running curiosity projects anymore. It's about a genuine structural shift in
+        where AI inference happens, who controls it, and what it costs.
+      </p>
+
+      <h2>Three Things Had to Be True First</h2>
+
+      <p>
+        Local AI isn't a new idea. What's changed is that three conditions have converged
+        simultaneously, each one a prerequisite for the shift to become real.
+      </p>
+
+      <p>
+        <strong>The models had to be good enough.</strong> For most of 2023 and into 2024,
+        running a model locally meant accepting a significant capability penalty. That gap has
+        closed dramatically. Llama 3.3 70B scores 86% on MMLU — a benchmark that would have
+        marked frontier-model territory eighteen months ago. Microsoft's Phi-4, at only 14
+        billion parameters, beats GPT-4o on mathematical reasoning benchmarks. The ceiling on
+        open model quality has moved up fast.
+      </p>
+
+      <p>
+        <strong>The hardware had to be ready.</strong> Running a useful LLM locally requires
+        memory bandwidth and dedicated neural processing. Consumer hardware didn't have this
+        in meaningful quantities until recently. Apple's unified memory architecture changed
+        the equation on the Mac side: a Mac Mini M4 Pro with 48GB of unified RAM can load
+        models that would require a $1,600+ discrete GPU on a traditional PC. On Windows,
+        virtually every laptop sold in 2026 ships with an NPU — the hardware has become a
+        commodity. (More on this below.)
+      </p>
+
+      <p>
+        <strong>The tooling had to become accessible.</strong> Running a local LLM in 2023
+        meant compiling llama.cpp from source and wrangling quantisation formats. Today,
+        Ollama — an open-source runtime built on top of llama.cpp — has crossed 169,000
+        GitHub stars and turned that three-day project into a ten-minute setup. One command
+        pulls a model, starts a local server, and exposes an API endpoint on localhost
+        compatible with existing OpenAI-format tooling.
+      </p>
+
+      <div class="callout callout--info">
+        <strong>The convergence is the story.</strong> Any one of these factors improving in
+        isolation wouldn't have been sufficient. It's the simultaneous arrival of capable
+        open models, NPU-equipped consumer hardware, and mature tooling that tips the equation.
+      </div>
+
+      <h2>Who's Driving It, and Why</h2>
+
+      <p>
+        The motivations behind local AI adoption aren't uniform — different actors are arriving
+        at the same destination from very different directions.
+      </p>
+
+      <div class="driver-grid">
+        <div class="driver-card">
+          <!-- Shield icon -->
+          <svg class="driver-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <div class="driver-card__title">Regulated Industries</div>
+          <div class="driver-card__body">Healthcare providers, law firms, and government contractors operate under HIPAA, GDPR, and data residency rules that make sending sensitive data to a third-party API legally untenable. Local models are often the only compliant path.</div>
+        </div>
+        <div class="driver-card">
+          <!-- Dollar / cost icon -->
+          <svg class="driver-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+          <div class="driver-card__title">Cost-Conscious Teams</div>
+          <div class="driver-card__body">Llama 3.3 70B can deliver GPT-4-class results at 5–25x lower cost when self-hosted at scale. For applications with high inference volume, the economics of local models quickly become compelling.</div>
+        </div>
+        <div class="driver-card">
+          <!-- Zap / latency icon -->
+          <svg class="driver-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+          <div class="driver-card__title">Latency-Sensitive Applications</div>
+          <div class="driver-card__body">Cloud API round-trips add hundreds of milliseconds per request — fine for a chatbot, breaking for real-time voice, code completion, or edge inference. Running on-device collapses latency to near-zero for the right model sizes.</div>
+        </div>
+        <div class="driver-card">
+          <!-- Globe / sovereignty icon -->
+          <svg class="driver-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <div class="driver-card__title">Digital Sovereignty</div>
+          <div class="driver-card__body">Governments and large enterprises increasingly want AI infrastructure they control outright — not infrastructure they rent from a US hyperscaler. Local and self-hosted AI fits that political and strategic mandate.</div>
+        </div>
+      </div>
+
+      <h2>The Open Model Ecosystem: A Landscape in Motion</h2>
+
+      <p>
+        The open model space in 2026 is a fast-moving collection of competing approaches from
+        companies with different philosophies, different strengths, and different licensing
+        positions.
+      </p>
+
+      <div class="table-wrap">
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th>Model Family</th>
+              <th>Creator</th>
+              <th>Sweet Spot</th>
+              <th>Licence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Llama 3.3</td>
+              <td>Meta</td>
+              <td>Instruction following, structured output, broad ecosystem</td>
+              <td>Llama Community</td>
+            </tr>
+            <tr>
+              <td>Mistral Small 4</td>
+              <td>Mistral AI</td>
+              <td>Code generation (92% HumanEval), 256K context, MoE efficiency</td>
+              <td>Apache 2.0</td>
+            </tr>
+            <tr>
+              <td>Phi-4</td>
+              <td>Microsoft</td>
+              <td>Maths &amp; reasoning at small scale (14B beats GPT-4o on MATH)</td>
+              <td>MIT</td>
+            </tr>
+            <tr>
+              <td>Gemma 3</td>
+              <td>Google</td>
+              <td>Multimodal tasks, tight hardware optimisation</td>
+              <td>Gemma ToS</td>
+            </tr>
+            <tr>
+              <td>Qwen 3</td>
+              <td>Alibaba</td>
+              <td>Multilingual, long context, strong STEM reasoning</td>
+              <td>Qwen License</td>
+            </tr>
+            <tr>
+              <td>DeepSeek R1</td>
+              <td>DeepSeek</td>
+              <td>Deep reasoning chains, competitive with frontier models</td>
+              <td>MIT</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        What's striking is that the quality gap between the best open models and closed frontier
+        models has effectively closed for a substantial number of practical tasks. Open models
+        still trail on the most complex multi-step reasoning challenges, but for the majority of
+        real-world applications the difference now matters less than cost, latency, or data
+        control. The number of open-source models available for local deployment grew by over
+        300% between 2024 and 2026 — Ollama's library alone lists more than 100 distinct
+        model families.
+      </p>
+
+      <h2>The Hardware Story: NPUs Are Everywhere Now</h2>
+
+      <p>
+        An NPU (Neural Processing Unit) is a chip architecture optimised for the matrix
+        multiplication operations that underpin neural network inference. Unlike a GPU, which
+        is designed for general parallel workloads, an NPU is single-purpose: it exists to run
+        AI models efficiently at low power. In 2026, virtually every new laptop and premium
+        smartphone ships with one.
+      </p>
+
+      <div class="chart-wrap">
+        <div class="chart-wrap__title">Consumer NPU Performance — TOPS (Trillion Operations / Second), 2026</div>
+        <canvas id="npu-chart"></canvas>
+      </div>
+
+      <p>
+        The numbers are significant, but the Apple Silicon story has a nuance worth
+        understanding. Apple's unified memory architecture makes all system RAM available to
+        the GPU and NPU without copying overhead, which is why a Mac Mini M4 Pro with 48GB
+        can load models that would require a $1,600+ discrete GPU elsewhere — even though its
+        raw NPU TOPS figure trails the Qualcomm and AMD leaders.
+      </p>
+
+      <p>
+        The current catch is software fragmentation. Each vendor uses a different model format
+        for NPU-native inference: Qualcomm's QNN, Intel's OpenVINO, Apple's Core ML. Most
+        local AI tooling in 2026 still routes inference through the CPU and GPU rather than the
+        NPU, leaving significant performance on the table. The hardware is ahead of the
+        software ecosystem — a gap that's closing, but hasn't closed yet.
+      </p>
+
+      <h2>What This Means for the Cloud AI Giants</h2>
+
+      <p>
+        The rise of local AI doesn't make cloud AI obsolete — it bifurcates the market. Frontier
+        model capabilities — the kind of deep reasoning and advanced synthesis that only a 400B+
+        parameter model delivers — will remain in the cloud for the foreseeable future. GPT-5,
+        Claude Opus, and Gemini Ultra remain cloud-native products.
+      </p>
+
+      <p>
+        But a growing slice of real-world inference — summarisation, classification, code
+        completion, document analysis, conversational agents — doesn't need frontier
+        capabilities. It needs something that's good enough, fast, cheap, and private. That
+        is exactly where local models are winning. The question for cloud providers isn't
+        whether local AI threatens their existence; it's how large that "good enough" category
+        grows over time, and what it does to API call volume.
+      </p>
+
+      <div class="callout callout--warning">
+        <strong>The enterprise angle is the one to watch.</strong> Individual developers
+        experimenting with Ollama represent a trend. Large enterprises deploying local or
+        on-premises models for compliance and cost reasons at scale represent a structural
+        shift — already underway in financial services, healthcare, and government.
+      </div>
+
+      <h2>The Honest Gaps</h2>
+
+      <p>
+        <strong>The frontier gap is still real for hard tasks.</strong> For complex,
+        multi-domain reasoning, the best local models still trail GPT-5 and Claude Opus. If
+        you need the industry's best on a genuinely hard problem, you're still reaching for
+        the cloud.
+      </p>
+
+      <p>
+        <strong>NPU software fragmentation is genuinely painful.</strong> There's no
+        CUDA-equivalent for NPUs yet. Optimising for NPU acceleration means targeting each
+        chip vendor separately, and most tooling is still CPU and GPU-first.
+      </p>
+
+      <p>
+        <strong>Quantisation and model management have real costs.</strong> Running a 70B model
+        on consumer hardware requires aggressive quantisation — compressing weights from 16-bit
+        floats to 4-bit integers — which introduces measurable quality degradation. And managing
+        multiple local models, switching between them, keeping them updated, is still a more
+        manual process than calling an API. The UX hasn't yet reached mainstream readiness.
+      </p>
+
+      <h2>The Bottom Line</h2>
+
+      <p>
+        Local AI is not replacing cloud AI. It's creating a capable layer underneath it —
+        increasingly the right answer for a significant portion of real-world use cases. The
+        structural drivers are durable: NPUs are now commodity, open models are closing the
+        quality gap, and tooling has removed most of the friction. The motivations — privacy,
+        cost, latency, sovereignty — aren't going away.
+      </p>
+
+      <p>
+        What we're watching is the early innings of a bifurcated AI infrastructure: frontier
+        reasoning in the cloud for the problems that demand it, and capable local inference
+        for everything that doesn't. Understanding where your use case sits in that landscape
+        is quickly becoming a necessary part of any serious AI strategy.
+      </p>
+
+      <blockquote>
+        The question is no longer "can local AI be good enough?" — it's "how much of what
+        you're sending to the cloud actually needs to go there?"
+      </blockquote>
+
+      <!-- Sources -->
+      <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border);" />
+      <p style="font-size: 0.82rem; color: var(--text-muted);">
+        <strong>Sources:</strong>
+        <a href="https://www.edge-ai-vision.com/2026/01/on-device-llms-in-2026-what-changed-what-matters-whats-next/" target="_blank" rel="noopener">Edge AI &amp; Vision Alliance — On-Device LLMs in 2026</a> ·
+        <a href="https://localaimaster.com/blog/npu-comparison-2026" target="_blank" rel="noopener">NPU Comparison 2026 — Local AI Master</a> ·
+        <a href="https://blog.premai.io/llama-vs-mistral-vs-phi-complete-open-source-llm-comparison-for-enterprise-2026/" target="_blank" rel="noopener">Llama vs Mistral vs Phi — Prem AI</a> ·
+        <a href="https://www.programming-helper.com/tech/ollama-2026-local-llm-revolution-privacy-enterprise" target="_blank" rel="noopener">Ollama 2026 — Programming Helper</a> ·
+        <a href="https://github.com/ollama/ollama" target="_blank" rel="noopener">Ollama GitHub</a> ·
+        <a href="https://localaimaster.com/blog/small-language-models-guide-2026" target="_blank" rel="noopener">Best Small AI Models 2026 — Local AI Master</a>
+      </p>
+
+    </div><!-- /.post-body -->
+
+    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+      <a href="index.html" class="btn btn--ghost">← Back to all posts</a>
+    </div>
+
+  </article>
+
+  <!-- ── Newsletter ── -->
+  <div class="container">
+    <section class="newsletter" aria-label="Newsletter signup">
+      <h2>Enjoyed this post?</h2>
+      <p>Subscribe to get new experiments and breakdowns straight to your inbox.</p>
+      <form class="newsletter__form" id="newsletter-form" novalidate>
+        <input class="newsletter__input" type="email" name="email" placeholder="you@example.com"
+               autocomplete="email" aria-label="Email address" required />
+        <button class="btn btn--primary" type="submit">Subscribe</button>
+      </form>
+      <div class="toast" id="newsletter-toast">✓ You're in — thanks for subscribing!</div>
+    </section>
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <p>© 2026 Lorenzo Bartolo · <a href="about.html">About</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var ctx = document.getElementById("npu-chart");
+      if (!ctx) return;
+
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: [
+            "Qualcomm Snapdragon X Elite",
+            "AMD Ryzen AI 300 (XDNA 2)",
+            "Intel Core Ultra 200V (Lunar Lake)",
+            "Apple M4 Neural Engine"
+          ],
+          datasets: [{
+            label: "TOPS",
+            data: [85, 60, 48, 38],
+            backgroundColor: [
+              "#2563eb",
+              "#3b82f6",
+              "#60a5fa",
+              "#93c5fd"
+            ],
+            borderRadius: 5,
+            borderSkipped: false
+          }]
+        },
+        options: {
+          indexAxis: "y",
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) { return " " + ctx.parsed.x + " TOPS"; }
+              },
+              bodyFont: { size: 12 },
+              titleFont: { size: 12, weight: "600" }
+            }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              max: 100,
+              grid: { color: "#f3f4f6" },
+              ticks: {
+                font: { size: 11 },
+                callback: function(val) { return val + " T"; }
+              }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { size: 11 } }
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

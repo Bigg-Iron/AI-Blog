@@ -112,6 +112,16 @@ const POSTS = [
     readTime: "10 min read",
     href: "post-agent-stack.html",
   },
+  {
+    id: 11,
+    title: "The Rise of Local AI: How On-Device Models Are Reshaping the Landscape",
+    date: "2026-05-10",
+    excerpt:
+      "Cloud AI still dominates the headlines, but local models are quietly winning the infrastructure war. A macro look at why local AI is rising, who's driving it, and what it means for the industry.",
+    tags: ["AI Tools", "Data"],
+    readTime: "9 min read",
+    href: "post-local-ai-trends.html",
+  },
 ];
 
 // Tag → CSS modifier map
