@@ -122,6 +122,16 @@ const POSTS = [
     readTime: "9 min read",
     href: "post-local-ai-trends.html",
   },
+  {
+    id: 12,
+    title: "Google I/O 2026: The AI Event You Cannot Miss — May 19",
+    date: "2026-05-15",
+    excerpt:
+      "Google I/O 2026 kicks off May 19. Here's every reason you should be watching: Gemini 4, Project Astra smart glasses, Android 17, and the agentic AI revolution.",
+    tags: ["AI Tools"],
+    readTime: "6 min read",
+    href: "google-io-2026.html",
+  },
 ];
 
 // Tag → CSS modifier map
