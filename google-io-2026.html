@@ -3,702 +3,1410 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Google I/O 2026: Welcome to the Agentic Era — AI Navigator</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <title>Google I/O 2026: The AI Event You Cannot Miss — May 19</title>
+  <meta name="description" content="Google I/O 2026 kicks off May 19. Here's every reason you should be watching: Gemini 4, Project Astra smart glasses, Android 17, and the agentic AI revolution." />
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap');
+
     :root {
-      --bg: #0d0d0d;
-      --surface: #161616;
-      --surface2: #1f1f1f;
-      --border: #2a2a2a;
-      --text: #e8e8e8;
-      --muted: #888;
-      --accent-blue: #4285F4;
-      --accent-green: #34A853;
-      --accent-yellow: #FBBC05;
-      --accent-red: #EA4335;
-      --signal: #34A853;
-      --noise: #EA4335;
+      --blue:   #1a73e8;
+      --red:    #ea4335;
+      --yellow: #fbbc04;
+      --green:  #34a853;
+      --dark:   #0d1117;
+      --mid:    #1a1f2e;
+      --card:   #1e2535;
+      --border: rgba(255,255,255,0.08);
+      --text:   #e8eaed;
+      --muted:  #9aa0a6;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      background: var(--dark);
       color: var(--text);
-      line-height: 1.75;
-      font-size: 17px;
+      line-height: 1.7;
     }
 
-    /* ── SITE NAV ── */
-    .site-nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(13,13,13,0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .site-nav__inner {
-      display: flex; align-items: center; justify-content: space-between;
-      max-width: 1100px; margin: 0 auto;
-      padding: 0 5vw; height: 60px;
-    }
-    .site-nav__logo {
-      font-size: 1rem; font-weight: 700; color: var(--text);
-      text-decoration: none;
-      display: flex; align-items: center; gap: 0.5rem;
-      letter-spacing: -0.01em;
-    }
-    .site-nav__logo:hover { color: var(--accent-blue); text-decoration: none; }
-    .site-nav__logo-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--accent-blue); display: inline-block; flex-shrink: 0;
-    }
-    .site-nav__links {
-      display: flex; gap: 1.75rem; list-style: none; align-items: center;
-    }
-    .site-nav__links a {
-      color: var(--muted); font-size: 0.9rem; font-weight: 500;
-      text-decoration: none; transition: color .15s;
-    }
-    .site-nav__links a:hover { color: var(--text); }
-
-    /* ── HERO ── */
+    /* ── HERO ─────────────────────────────────────────── */
     .hero {
       position: relative;
-      min-height: 520px;
+      min-height: 92vh;
       display: flex;
-      align-items: flex-end;
-      background: linear-gradient(135deg, #1a1a3e 0%, #0d2060 40%, #0a0a0a 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
       overflow: hidden;
-      padding: 60px 5vw 56px;
+      padding: 3rem 1.5rem 5rem;
     }
+
     .hero-bg {
-      position: absolute; inset: 0;
-      background-image: url('https://storage.googleapis.com/gweb-uniblog-publish-prod/images/SundarKeynote_tempsocial.width-1300.png');
-      background-size: cover;
-      background-position: center 30%;
-      opacity: 0.18;
+      position: absolute; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 120% 80% at 50% -10%,
+        rgba(26,115,232,.45) 0%,
+        rgba(52,168,83,.18) 40%,
+        transparent 70%),
+        var(--dark);
     }
-    .hero-content { position: relative; max-width: 820px; }
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(66,133,244,0.18); border: 1px solid rgba(66,133,244,0.35);
-      border-radius: 100px; padding: 5px 16px;
-      font-size: 13px; font-weight: 600; letter-spacing: 0.08em;
-      color: #7eb3ff; text-transform: uppercase; margin-bottom: 22px;
+
+    /* animated coloured orbs */
+    .orb {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: .35;
+      animation: float 8s ease-in-out infinite alternate;
     }
+    .orb-1 { width: 520px; height: 520px; top: -160px; left: -120px; background: #1a73e8; animation-delay: 0s; }
+    .orb-2 { width: 380px; height: 380px; top: 60px; right: -80px;  background: #34a853; animation-delay: -3s; }
+    .orb-3 { width: 260px; height: 260px; bottom: 0;  left: 30%;    background: #ea4335; animation-delay: -5s; }
+
+    @keyframes float {
+      from { transform: translateY(0) scale(1); }
+      to   { transform: translateY(-30px) scale(1.06); }
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 860px; }
+
+    .io-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 999px; padding: .35rem 1rem;
+      font-size: .8rem; font-weight: 600; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 1.6rem;
+      backdrop-filter: blur(12px);
+    }
+    .io-badge span { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 1.6s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.3; } }
+
     .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.4rem);
-      font-weight: 800; line-height: 1.15;
-      background: linear-gradient(135deg, #fff 30%, #7eb3ff 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text; margin-bottom: 18px;
-    }
-    .hero-meta {
-      display: flex; gap: 20px; align-items: center;
-      font-size: 14px; color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      margin-bottom: 1.4rem;
     }
 
-    /* ── LAYOUT ── */
-    .container { max-width: 860px; margin: 0 auto; padding: 0 5vw; }
+    .google-g { display: inline-block; }
+    .g-blue   { color: var(--blue); }
+    .g-red    { color: var(--red); }
+    .g-yellow { color: var(--yellow); }
+    .g-green  { color: var(--green); }
 
-    /* ── SUMMARY CARD ── */
-    .summary-card {
-      background: var(--surface);
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted);
+      max-width: 620px;
+      margin: 0 auto 2.6rem;
+    }
+
+    .btn-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: var(--blue); color: #fff;
+      border: none; border-radius: 999px;
+      padding: .85rem 2.2rem; font-size: 1rem; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: background .2s, transform .15s;
+    }
+    .btn-primary:hover { background: #1557b0; transform: translateY(-2px); }
+
+    .btn-secondary {
+      background: transparent; color: var(--text);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 999px;
+      padding: .85rem 2.2rem; font-size: 1rem; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      transition: border-color .2s, transform .15s, background .2s;
+    }
+    .btn-secondary:hover { border-color: #fff; background: rgba(255,255,255,.06); transform: translateY(-2px); }
+
+    /* countdown strip */
+    .countdown-strip {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 1;
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: center; gap: 3rem;
+      padding: 1.2rem 1.5rem;
+      flex-wrap: wrap;
+    }
+    .cd-unit { text-align: center; }
+    .cd-num  { font-size: 2rem; font-weight: 700; line-height: 1; }
+    .cd-lbl  { font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-top: .2rem; }
+
+    /* ── LAYOUT ───────────────────────────────────────── */
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+    section { padding: 5rem 1.5rem; }
+
+    h2 {
+      font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -.02em;
+    }
+    .section-label {
+      font-size: .75rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      margin-bottom: .6rem;
+      color: var(--blue);
+    }
+    .section-intro { font-size: 1.05rem; color: var(--muted); max-width: 660px; margin-bottom: 3rem; }
+
+    /* ── IMAGE HERO CARD ──────────────────────────────── */
+    .img-hero {
+      width: 100%; border-radius: 20px; overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,.5);
+      margin-bottom: 4rem;
+    }
+    .img-hero img { width: 100%; display: block; }
+
+    /* ── STAT BAR ─────────────────────────────────────── */
+    .stat-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.5rem;
+      background: var(--card);
       border: 1px solid var(--border);
-      border-left: 4px solid var(--accent-blue);
-      border-radius: 12px; padding: 28px 32px; margin: 48px 0 40px;
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      margin-bottom: 5rem;
     }
-    .summary-card h2 {
-      font-size: 12px; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--accent-blue); margin-bottom: 14px;
-    }
-    .summary-card p { color: #bbb; font-size: 15.5px; line-height: 1.8; }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2.4rem; font-weight: 800; }
+    .stat-desc { font-size: .8rem; color: var(--muted); margin-top: .3rem; }
 
-    /* ── VIDEO EMBED ── */
-    .video-wrap {
-      margin: 40px 0; border-radius: 16px; overflow: hidden;
+    /* ── FEATURE CARDS ────────────────────────────────── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .card {
+      background: var(--card);
       border: 1px solid var(--border);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform .25s, box-shadow .25s;
     }
-    .video-label {
-      background: var(--surface2); padding: 12px 20px;
-      display: flex; align-items: center; gap: 10px;
-      font-size: 13px; color: var(--muted); font-weight: 600;
+    .card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,.4); }
+
+    .card-img {
+      width: 100%; height: 200px; object-fit: cover; display: block;
     }
-    .video-label .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-red); }
-    .video-wrap iframe {
-      width: 100%; aspect-ratio: 16/9; display: block; border: none;
+    /* coloured placeholder when image fallback */
+    .card-img-placeholder {
+      width: 100%; height: 200px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
     }
 
-    /* ── STATS BAR ── */
-    .stats-bar {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 1px; background: var(--border);
-      border: 1px solid var(--border); border-radius: 14px;
-      overflow: hidden; margin: 40px 0;
+    .card-body { padding: 1.6rem; }
+    .card-tag {
+      display: inline-block;
+      font-size: .7rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      border-radius: 999px; padding: .25rem .75rem;
+      margin-bottom: .8rem;
     }
-    .stat { background: var(--surface2); padding: 24px 20px; text-align: center; }
-    .stat-num {
-      font-size: 2rem; font-weight: 800;
-      background: linear-gradient(135deg, var(--accent-blue), #7eb3ff);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text; line-height: 1.1; margin-bottom: 6px;
-    }
-    .stat-label { font-size: 12px; color: var(--muted); font-weight: 500; line-height: 1.4; }
+    .tag-blue   { background: rgba(26,115,232,.18);  color: #7baef8; }
+    .tag-green  { background: rgba(52,168,83,.18);   color: #5bb974; }
+    .tag-red    { background: rgba(234,67,53,.18);   color: #f28b82; }
+    .tag-yellow { background: rgba(251,188,4,.18);   color: #fdd663; }
 
-    /* ── SECTION HEADER ── */
-    h2.section-title {
-      font-size: 1.75rem; font-weight: 800; margin: 60px 0 6px;
-      letter-spacing: -0.02em;
-    }
-    .section-divider { height: 1px; background: var(--border); margin-bottom: 32px; }
+    .card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: .5rem; }
+    .card p  { font-size: .9rem; color: var(--muted); }
 
-    /* ── TOPIC CARD ── */
-    .topic {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 16px; overflow: hidden; margin-bottom: 40px;
+    /* ── BIG SPLIT SECTION ────────────────────────────── */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
     }
-    .topic-header {
-      padding: 26px 28px 18px;
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
-    }
-    .topic-header-left { flex: 1; }
-    .topic-num {
-      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-      color: var(--muted); text-transform: uppercase; margin-bottom: 8px;
-    }
-    .topic h3 {
-      font-size: 1.25rem; font-weight: 800; line-height: 1.25; margin-bottom: 0;
-      letter-spacing: -0.01em;
-    }
-    .badge {
-      flex-shrink: 0; font-size: 11px; font-weight: 800; letter-spacing: 0.1em;
-      text-transform: uppercase; padding: 6px 14px; border-radius: 100px;
-    }
-    .badge.signal { background: rgba(52,168,83,0.15); color: var(--signal); border: 1px solid rgba(52,168,83,0.3); }
-    .badge.noise  { background: rgba(234,67,53,0.12);  color: var(--noise);  border: 1px solid rgba(234,67,53,0.25); }
+    @media (max-width: 700px) { .split { grid-template-columns: 1fr; } }
 
-    .topic-body { padding: 22px 28px 26px; }
-    .topic-body p { color: #bbb; font-size: 15.5px; margin-bottom: 14px; }
-    .topic-body p:last-child { margin-bottom: 0; }
-
-    .topic-image {
-      width: 100%; display: block; object-fit: cover;
-      max-height: 380px; border-bottom: 1px solid var(--border);
-    }
-    .topic-image-caption {
-      font-size: 12px; color: var(--muted); text-align: center;
-      padding: 8px 20px; background: var(--surface2); border-bottom: 1px solid var(--border);
-      font-style: italic;
+    .split-img {
+      width: 100%; border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
     }
 
-    .verdict-box {
-      display: flex; gap: 12px; align-items: flex-start;
-      background: var(--surface2); border-radius: 10px;
-      padding: 14px 16px; margin-top: 16px; border: 1px solid var(--border);
-    }
-    .verdict-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
-    .verdict-text { font-size: 14.5px; color: #ccc; line-height: 1.6; }
-    .verdict-text strong { color: var(--text); }
+    .split-text h2 { margin-bottom: 1rem; }
+    .split-text p  { color: var(--muted); margin-bottom: 1.4rem; font-size: 1rem; }
 
-    /* ── CHART ── */
-    .chart-wrap {
-      background: var(--surface2); border-radius: 14px;
-      border: 1px solid var(--border); padding: 24px; margin: 30px 0;
+    .bullet-list { list-style: none; display: flex; flex-direction: column; gap: .7rem; }
+    .bullet-list li {
+      display: flex; gap: .75rem; align-items: flex-start;
+      font-size: .95rem;
     }
-    .chart-title {
-      font-size: 13px; font-weight: 700; color: var(--muted);
-      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px;
+    .bullet-list li::before {
+      content: '→';
+      flex-shrink: 0;
+      color: var(--blue);
+      font-weight: 700;
+      margin-top: .05rem;
     }
-    .bar-chart { display: flex; flex-direction: column; gap: 14px; }
-    .bar-row { display: flex; align-items: center; gap: 12px; }
-    .bar-label { font-size: 13px; color: var(--text); width: 160px; flex-shrink: 0; font-weight: 500; }
-    .bar-track { flex: 1; background: rgba(255,255,255,0.07); border-radius: 100px; height: 22px; overflow: hidden; }
-    .bar-fill { height: 100%; border-radius: 100px; display: flex; align-items: center; padding-left: 10px; }
-    .bar-val { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); white-space: nowrap; }
 
-    /* ── ONES TO WATCH ── */
-    .watch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 24px; }
-    .watch-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 14px; padding: 22px 20px;
+    /* ── TIMELINE ─────────────────────────────────────── */
+    .timeline { position: relative; margin-top: 3rem; }
+    .timeline::before {
+      content: ''; position: absolute;
+      left: 20px; top: 0; bottom: 0; width: 2px;
+      background: var(--border);
     }
-    .watch-card .watch-icon { font-size: 1.6rem; margin-bottom: 10px; }
-    .watch-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
-    .watch-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .tl-item {
+      display: flex; gap: 1.5rem;
+      padding-bottom: 2.5rem;
+      padding-left: 52px;
+      position: relative;
+    }
+    .tl-dot {
+      position: absolute; left: 11px; top: 4px;
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .5rem; font-weight: 900;
+    }
+    .tl-dot-blue   { background: rgba(26,115,232,.2);  border-color: var(--blue);   color: var(--blue); }
+    .tl-dot-green  { background: rgba(52,168,83,.2);   border-color: var(--green);  color: var(--green); }
+    .tl-dot-red    { background: rgba(234,67,53,.2);   border-color: var(--red);    color: var(--red); }
+    .tl-dot-yellow { background: rgba(251,188,4,.2);   border-color: var(--yellow); color: var(--yellow); }
 
-    /* ── TAKEAWAY ── */
-    .takeaway {
-      background: linear-gradient(135deg, #0d2060 0%, #1a1a3e 100%);
-      border: 1px solid rgba(66,133,244,0.3);
-      border-radius: 16px; padding: 36px 40px; margin: 48px 0;
-    }
-    .takeaway h2 {
-      font-size: 1.1rem; font-weight: 800; color: #7eb3ff;
-      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;
-    }
-    .takeaway p { color: #ccc; line-height: 1.9; font-size: 16px; }
+    .tl-text h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: .3rem; }
+    .tl-text p  { font-size: .9rem; color: var(--muted); }
 
-    /* ── FOOTER ── */
+    /* ── QUOTE CALLOUT ────────────────────────────────── */
+    .quote-block {
+      background: var(--card);
+      border-left: 4px solid var(--blue);
+      border-radius: 0 16px 16px 0;
+      padding: 2rem 2.4rem;
+      margin: 4rem 0;
+    }
+    .quote-block blockquote {
+      font-size: 1.25rem; font-style: italic; line-height: 1.6;
+      margin-bottom: .8rem;
+    }
+    .quote-block cite { font-size: .85rem; color: var(--muted); }
+
+    /* ── HYPE BANNER ──────────────────────────────────── */
+    .hype-banner {
+      background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 50%, #1a237e 100%);
+      border-radius: 24px;
+      padding: 4rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hype-banner::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 20%, rgba(255,255,255,.12), transparent 60%);
+    }
+    .hype-banner h2 { font-size: clamp(1.8rem, 4vw, 3rem); margin-bottom: 1rem; position: relative; }
+    .hype-banner p  { font-size: 1.1rem; color: rgba(255,255,255,.8); max-width: 580px; margin: 0 auto 2rem; position: relative; }
+
+    /* ── SCHEDULE TABS ───────────────────────────────── */
+    .schedule-header {
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .day-tabs { display: flex; gap: .5rem; }
+    .day-tab {
+      padding: .55rem 1.4rem; border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent; color: var(--muted);
+      font-size: .88rem; font-weight: 600; cursor: pointer;
+      transition: all .2s;
+    }
+    .day-tab.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .day-tab:hover:not(.active) { border-color: rgba(255,255,255,.3); color: var(--text); }
+
+    .day-panel { display: none; }
+    .day-panel.active { display: block; }
+
+    .session-list { display: flex; flex-direction: column; gap: .9rem; }
+
+    .session-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .session-card:hover { border-color: rgba(255,255,255,.2); }
+    .session-card.open { border-color: rgba(26,115,232,.4); box-shadow: 0 0 0 1px rgba(26,115,232,.15); }
+
+    .session-header {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1.2rem 1.5rem; cursor: pointer; user-select: none;
+      flex-wrap: wrap;
+    }
+
+    .session-time {
+      flex-shrink: 0; min-width: 125px;
+      font-size: .78rem; font-weight: 700;
+      color: var(--muted); letter-spacing: .03em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .session-dot {
+      flex-shrink: 0; width: 9px; height: 9px;
+      border-radius: 50%; margin-right: -.2rem;
+    }
+
+    .session-title-group { flex: 1; min-width: 0; }
+    .session-title { font-size: .98rem; font-weight: 700; line-height: 1.3; }
+    .session-subtitle { font-size: .78rem; color: var(--muted); margin-top: .15rem; }
+
+    .session-badges { display: flex; gap: .35rem; flex-wrap: wrap; align-items: center; }
+    .s-badge {
+      font-size: .62rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; padding: .18rem .55rem; border-radius: 999px;
+    }
+    .s-live { background: rgba(234,67,53,.15); color: #f28b82; }
+    .s-blue { background: rgba(26,115,232,.15); color: #7baef8; }
+    .s-green { background: rgba(52,168,83,.15); color: #5bb974; }
+    .s-yellow { background: rgba(251,188,4,.15); color: #fdd663; }
+    .s-purple { background: rgba(156,39,176,.15); color: #ce93d8; }
+    .s-teal { background: rgba(0,150,136,.15); color: #80cbc4; }
+
+    .session-chevron {
+      flex-shrink: 0; margin-left: auto;
+      color: var(--muted); transition: transform .25s;
+      font-size: .85rem;
+    }
+    .session-card.open .session-chevron { transform: rotate(180deg); }
+
+    .session-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height .4s cubic-bezier(0.4,0,0.2,1), padding .25s ease;
+      padding: 0 1.5rem;
+    }
+    .session-card.open .session-body { max-height: 700px; padding: 0 1.5rem 1.5rem; }
+
+    .session-body-inner { border-top: 1px solid var(--border); padding-top: 1.1rem; }
+    .session-body p { font-size: .9rem; color: var(--muted); margin-bottom: .9rem; line-height: 1.65; }
+    .session-body ul { list-style: none; display: flex; flex-direction: column; gap: .35rem; margin-bottom: .9rem; }
+    .session-body ul li {
+      font-size: .88rem; color: var(--muted);
+      display: flex; gap: .6rem; align-items: flex-start;
+    }
+    .session-body ul li::before { content: '›'; color: var(--blue); font-weight: 900; flex-shrink: 0; }
+    .session-body-footer { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; margin-top: 1rem; }
+    .session-watch-link {
+      font-size: .82rem; font-weight: 600; color: var(--blue);
+      text-decoration: none; display: flex; align-items: center; gap: .3rem;
+    }
+    .session-watch-link:hover { text-decoration: underline; }
+
+    /* ── CALENDAR BUTTON ──────────────────────────────── */
+    .cal-wrap { position: relative; display: inline-block; }
+
+    .btn-cal {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px; padding: .85rem 1.8rem;
+      font-size: 1rem; font-weight: 600; color: var(--text);
+      cursor: pointer; text-decoration: none;
+      transition: background .2s, transform .15s;
+      white-space: nowrap;
+    }
+    .btn-cal:hover { background: rgba(255,255,255,.13); transform: translateY(-2px); }
+
+    .cal-dropdown {
+      display: none; position: absolute; top: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%);
+      background: #252d3f; border: 1px solid var(--border);
+      border-radius: 14px; padding: .45rem;
+      min-width: 220px; z-index: 200;
+      box-shadow: 0 20px 50px rgba(0,0,0,.55);
+      text-align: left;
+    }
+    .cal-wrap.open .cal-dropdown { display: block; }
+    .cal-option {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .65rem 1rem; border-radius: 9px;
+      font-size: .88rem; font-weight: 500; color: var(--text);
+      cursor: pointer; text-decoration: none;
+      transition: background .15s;
+    }
+    .cal-option:hover { background: rgba(255,255,255,.08); }
+
+    /* small session-level cal btn */
+    .btn-cal-sm {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .78rem; font-weight: 600; color: var(--blue);
+      border: 1px solid rgba(26,115,232,.28);
+      background: rgba(26,115,232,.08); border-radius: 999px;
+      padding: .3rem .85rem; cursor: pointer;
+      text-decoration: none; transition: background .15s;
+      white-space: nowrap;
+    }
+    .btn-cal-sm:hover { background: rgba(26,115,232,.18); }
+    .cal-sm-wrap { position: relative; display: inline-block; }
+    .cal-sm-wrap .cal-dropdown { left: 0; transform: none; }
+
+    /* ── FOOTER ───────────────────────────────────────── */
     footer {
-      border-top: 1px solid var(--border); padding: 32px 5vw;
-      text-align: center; color: var(--muted); font-size: 13px; margin-top: 60px;
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: .85rem;
     }
-    footer a { color: var(--accent-blue); text-decoration: none; }
+    footer a { color: var(--blue); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
-    /* ── RESPONSIVE ── */
+    /* ── RESPONSIVE ───────────────────────────────────── */
     @media (max-width: 600px) {
-      .stats-bar { grid-template-columns: 1fr; }
-      .topic-header { flex-direction: column; }
-      .badge { align-self: flex-start; }
-      .takeaway { padding: 24px 20px; }
+      .countdown-strip { gap: 1.2rem; }
+      .stat-bar { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
 
-<!-- ══ SITE NAV ══ -->
-<nav class="site-nav">
-  <div class="site-nav__inner">
-    <a href="index.html" class="site-nav__logo">
-      <span class="site-nav__logo-dot"></span>
-      AI Navigator
-    </a>
-    <ul class="site-nav__links">
-      <li><a href="index.html">Blog</a></li>
-      <li><a href="about.html">About</a></li>
-    </ul>
-  </div>
-</nav>
-
-<!-- ══ HERO ══ -->
-<div class="hero">
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<header class="hero">
   <div class="hero-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
   <div class="hero-content">
-    <div class="hero-eyebrow">
-      <span>◆</span> Shoreline Amphitheatre · 19 May 2026
-    </div>
-    <h1>Google I/O 2026:<br>Welcome to the Agentic Era</h1>
-    <div class="hero-meta">
-      <span>📅 19 May 2026</span>
-      <span>·</span>
-      <span>⏱ 12 min read</span>
-      <span>·</span>
-      <span>✍️ AI Navigator</span>
-    </div>
-  </div>
-</div>
+    <div class="io-badge"><span></span> Live keynote · May 19, 2026 · 10 AM PT</div>
 
-<!-- ══ MAIN ══ -->
-<div class="container">
+    <h1>
+      <span class="google-g">
+        <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span>
+      </span>
+      &nbsp;I/O&nbsp;2026<br>
+      is almost here.
+    </h1>
 
-  <!-- EXEC SUMMARY -->
-  <div class="summary-card">
-    <h2>Executive Summary</h2>
-    <p>
-      Google I/O 2026 was less a product showcase and more a declaration of intent: Google is betting everything on agentic AI — software that doesn't just answer questions, but acts on your behalf, around the clock. Sundar Pichai opened with a remarkable figure — 3.2 <em>quadrillion</em> tokens processed per month, up 7× year-on-year — then spent two hours showing exactly where those tokens are going. The headliners were <strong>Gemini Spark</strong> — a true 24/7 personal AI agent — and <strong>Gemini 3.5 Flash</strong>, a frontier model that's 4× faster and half the cost of rivals. On the hardware side, Google's Android XR smart glasses partnership with Samsung, Qualcomm, Gentle Monster, and Warby Parker signals that the post-smartphone era may finally have a credible path. The AI arms race just got a lot more concrete.
+    <p class="hero-sub">
+      Gemini 4. Project Astra. Android 17. Agentic AI. Google's biggest developer conference is
+      8 days away — and this year could rewrite the rules of what AI can do.
     </p>
-  </div>
 
-  <!-- KEYNOTE VIDEO -->
-  <div class="video-wrap">
-    <div class="video-label"><span class="dot"></span> Official Google I/O '26 Keynote — Watch in Full</div>
-    <iframe
-      src="https://www.youtube.com/embed/F5siZtTwGdg"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
-      title="Google I/O 2026 Keynote">
-    </iframe>
-  </div>
-
-  <!-- STATS BAR -->
-  <div class="stats-bar">
-    <div class="stat">
-      <div class="stat-num">3.2Q+</div>
-      <div class="stat-label">Tokens processed monthly<br>(up 7× YoY)</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">900M</div>
-      <div class="stat-label">Monthly active users<br>on the Gemini app</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">$180B</div>
-      <div class="stat-label">Expected 2026 capex<br>(~6× 2022 levels)</div>
-    </div>
-  </div>
-
-  <!-- SECTION: TRENDING TOPICS -->
-  <h2 class="section-title">Trending Topics</h2>
-  <div class="section-divider"></div>
-
-  <!-- 1. GEMINI SPARK -->
-  <div class="topic">
-    <img
-      class="topic-image"
-      src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Geminiapp_Bento_hero.width-600.format-webp.webp"
-      alt="Gemini Spark and the new Gemini app experience"
-    />
-    <div class="topic-image-caption">The new Gemini app — now powered by Spark and the Neural Expressive design language. © Google 2026</div>
-    <div class="topic-header">
-      <div class="topic-header-left">
-        <div class="topic-num">Topic 1</div>
-        <h3>Gemini Spark — Your 24/7 Personal AI Agent</h3>
-      </div>
-      <span class="badge signal">🟢 Signal</span>
-    </div>
-    <div class="topic-body">
-      <p><strong>What:</strong> Gemini Spark is a persistent AI agent inside the Gemini app that works autonomously — drafting emails, managing your calendar, running research, and completing multi-step workflows — without you needing to keep the app open. It runs on dedicated virtual machines in Google Cloud and operates continuously in the background.</p>
-      <p><strong>Why it's trending:</strong> Spark integrates directly with Gmail, Calendar, Google Tasks, and (coming this summer) third-party apps via MCP. It rolls out to AI Ultra subscribers in the US next week. On Android, a new ambient UI layer called <strong>Android Halo</strong> surfaces agent progress at the very top of your screen, so you can watch Spark work without opening anything. Later this summer, Spark will operate directly inside Chrome across the web.</p>
-      <div class="verdict-box">
-        <span class="verdict-icon">🟢</span>
-        <span class="verdict-text"><strong>Verdict — Signal.</strong> This is the most substantive shift in how people will interact with Google software. Spark isn't a chatbot with new tricks; it's a long-horizon autonomous agent that persists across sessions. If it works as demoed, the implications for how we manage email, scheduling, and research are profound. Watch the rollout closely.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. GEMINI 3.5 FLASH -->
-  <div class="topic">
-    <img
-      class="topic-image"
-      src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/gemini-3-5__keywordstatement__met.width-600.format-webp.webp"
-      alt="Gemini 3.5 Flash — frontier intelligence with action"
-    />
-    <div class="topic-image-caption">Gemini 3.5 Flash: the fastest frontier model on the planet, at half the price of competitors. © Google 2026</div>
-    <div class="topic-header">
-      <div class="topic-header-left">
-        <div class="topic-num">Topic 2</div>
-        <h3>Gemini 3.5 Flash — A Frontier Model That's Actually Fast</h3>
-      </div>
-      <span class="badge signal">🟢 Signal</span>
-    </div>
-    <div class="topic-body">
-      <p><strong>What:</strong> Gemini 3.5 Flash surpasses Gemini 3.1 Pro on virtually all benchmarks — including a dramatic jump on GDPVal, which measures real-world economically valuable tasks — while outputting tokens at <strong>4× the speed</strong> of comparable frontier models. It's available today across the Gemini app, Search, Antigravity 2.0, and the Gemini API.</p>
-      <p><strong>Why it's trending:</strong> Sundar cited a striking figure: large companies spending on frontier AI are "blowing through their annual token budgets and it's only May." Google's pitch is that shifting 80% of workloads from other frontier models to 3.5 Flash could save <strong>$1B+ annually</strong> for top-tier enterprise users. Google is also using it internally, processing over 3 trillion tokens per day on its own developer tooling.</p>
-
-      <div class="chart-wrap">
-        <div class="chart-title">Output Speed Comparison (tokens/second, relative to frontier baseline)</div>
-        <div class="bar-chart">
-          <div class="bar-row">
-            <div class="bar-label">Gemini 3.5 Flash</div>
-            <div class="bar-track">
-              <div class="bar-fill" style="width:100%; background: linear-gradient(90deg, #4285F4, #7eb3ff);">
-                <span class="bar-val">4× faster than frontier</span>
-              </div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">GPT-class frontier</div>
-            <div class="bar-track">
-              <div class="bar-fill" style="width:25%; background: rgba(255,255,255,0.2);">
-                <span class="bar-val">Baseline</span>
-              </div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">Claude Opus-class</div>
-            <div class="bar-track">
-              <div class="bar-fill" style="width:22%; background: rgba(255,255,255,0.15);">
-                <span class="bar-val">~Baseline</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p style="font-size:12px;color:#666;margin-top:14px;">Source: Artificial Analysis Intelligence Index vs. Output Speed, as presented at Google I/O 2026 keynote.</p>
-      </div>
-
-      <div class="verdict-box">
-        <span class="verdict-icon">🟢</span>
-        <span class="verdict-text"><strong>Verdict — Signal.</strong> Speed and cost are what convert demos into production deployments. If these benchmarks hold up under independent evaluation, 3.5 Flash will be the model developers reach for by default — eating significantly into OpenAI and Anthropic's enterprise share.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 3. GEMINI OMNI -->
-  <div class="topic">
-    <img
-      class="topic-image"
-      src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/GeminiOmni_social.width-600.format-webp.webp"
-      alt="Gemini Omni — multimodal video generation model"
-    />
-    <div class="topic-image-caption">Gemini Omni Flash: any input (text, image, audio, video) → grounded video output. © Google 2026</div>
-    <div class="topic-header">
-      <div class="topic-header-left">
-        <div class="topic-num">Topic 3</div>
-        <h3>Gemini Omni — Video Generation from Any Input</h3>
-      </div>
-      <span class="badge signal">🟢 Signal</span>
-    </div>
-    <div class="topic-body">
-      <p><strong>What:</strong> Gemini Omni is Google's first model capable of generating video from any combination of inputs — text, images, audio, and video — grounded in real-world knowledge. The debut model, Gemini Omni Flash, is live today in the Gemini app, Google Flow, and YouTube Shorts Remix. A Pro model follows later.</p>
-      <p><strong>Why it's trending:</strong> OpenAI's Sora has been the benchmark for AI video generation. Omni's distinguishing factor is that it combines generation <em>and</em> Gemini's deep reasoning — it doesn't just create pretty clips, it understands context. YouTube Shorts Remix powered by Omni is rolling out this week; developers get API access in the coming weeks. The Flow app is also now available on Android in beta.</p>
-      <div class="verdict-box">
-        <span class="verdict-icon">🟢</span>
-        <span class="verdict-text"><strong>Verdict — Signal.</strong> Multimodal generation at this scale, integrated directly into YouTube's 2.7B-user platform, is disruptive to the creator economy. Content production costs for short-form video are about to fall sharply. This will matter in 6–12 months as creator tooling matures around Omni.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4. SEARCH OVERHAUL -->
-  <div class="topic">
-    <img
-      class="topic-image"
-      src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Search_AI_and_search_engine_v46_1.width-600.format-webp.webp"
-      alt="Google Search in the agentic era"
-    />
-    <div class="topic-image-caption">Google Search gets its most significant upgrade since the web began. © Google 2026</div>
-    <div class="topic-header">
-      <div class="topic-header-left">
-        <div class="topic-num">Topic 4</div>
-        <h3>Google Search — The Biggest Upgrade in Nearly 30 Years</h3>
-      </div>
-      <span class="badge signal">🟢 Signal</span>
-    </div>
-    <div class="topic-body">
-      <p><strong>What:</strong> AI Mode in Search — already surpassing <strong>1 billion monthly active users</strong> after just one year — is now powered by Gemini 3.5 Flash. A new intelligent search box expands as you type, anticipating intent beyond autocomplete. New <strong>Information Agents</strong> monitor the web 24/7 on your behalf. And for complex tasks, Search will build persistent, custom <strong>mini-app dashboards</strong> using Antigravity's agentic coding — rolling out for AI Pro and Ultra users this summer.</p>
-      <p><strong>Why it's trending:</strong> AI Overviews already has 2.5 billion monthly active users. Google is threading a needle: making Search more powerful without cannibalising the web ecosystem that funds it. Generative UI — dynamic layouts and interactive visuals built on-the-fly for your individual query — rolls out for all users this summer, free of charge.</p>
-      <div class="verdict-box">
-        <span class="verdict-icon">🟢</span>
-        <span class="verdict-text"><strong>Verdict — Signal.</strong> Information Agents are the most threatening feature to traditional search workflows and the most valuable if they work. Search has been a box you type into for 30 years. Google is turning it into an ambient intelligence layer that works for you when you're not looking.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 5. ANDROID XR SMART GLASSES -->
-  <div class="topic">
-    <img
-      class="topic-image"
-      src="https://i0.wp.com/9to5google.com/wp-content/uploads/sites/4/2026/05/Android-XR-audio-glasses-cover.jpg?ssl=1"
-      alt="Android XR audio glasses from Google"
-    />
-    <div class="topic-image-caption">Android XR intelligent eyewear — audio glasses launching fall 2026, designed by Gentle Monster and Warby Parker. © 9to5Google 2026</div>
-    <div class="topic-header">
-      <div class="topic-header-left">
-        <div class="topic-num">Topic 5</div>
-        <h3>Android XR & Intelligent Eyewear — The Post-Phone Form Factor Arrives</h3>
-      </div>
-      <span class="badge signal">🟢 Signal</span>
-    </div>
-    <div class="topic-body">
-      <p><strong>What:</strong> Google revealed its "intelligent eyewear" strategy across two form factors: <strong>audio glasses</strong> (Gemini assistance spoken in your ear, hands-free) launching this fall; and <strong>display glasses</strong> (visual Gemini overlays) to follow. The hardware is built with Samsung and Qualcomm silicon, with exterior designs by luxury eyewear brands Gentle Monster and Warby Parker. Separately, Xreal's <strong>Project Aura</strong> — a full Android XR headset with a 70° field of view and Qualcomm Snapdragon inside — confirmed a global launch before end of 2026.</p>
-      <p><strong>Why it's trending:</strong> Three Android XR products confirmed for 2026. The glasses pair with both Android phones <em>and</em> the iPhone — removing a major adoption barrier. Google has opened public applications for its Android XR Developer Catalyst Program, and hardware dev kits ship to selected teams in the coming weeks.</p>
-      <div class="verdict-box">
-        <span class="verdict-icon">🟢</span>
-        <span class="verdict-text"><strong>Verdict — Signal.</strong> Meta's Ray-Ban smart glasses proved the market exists. Google arriving with Gemini integration, Qualcomm silicon, premium fashion brands, and a full OS ecosystem is a materially stronger bet. Audio glasses this fall is the domino — if they ship well, display glasses follow, and the phone starts losing its throne.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 6. UNIVERSAL CART -->
-  <div class="topic">
-    <img
-      class="topic-image"
-      src="https://i0.wp.com/9to5google.com/wp-content/uploads/sites/4/2026/05/google-gemini-universal-cart-1.jpg?ssl=1"
-      alt="Google Universal Cart — agentic shopping"
-    />
-    <div class="topic-image-caption">Universal Cart: add from Search, YouTube, or Gmail — Google finds the deal, flags incompatibilities, checks loyalty perks. © 9to5Google 2026</div>
-    <div class="topic-header">
-      <div class="topic-header-left">
-        <div class="topic-num">Topic 6</div>
-        <h3>Universal Cart — Google Wants to Own the Checkout</h3>
-      </div>
-      <span class="badge signal">🟢 Signal</span>
-    </div>
-    <div class="topic-body">
-      <p><strong>What:</strong> Universal Cart is a Gemini-powered cross-platform shopping cart that lets you add products from Search, YouTube, Gmail, or the Gemini app into a single intelligent hub. It automatically finds price drops, tracks price history, alerts on stock changes, and — notably — flags product incompatibilities (e.g. a motherboard that won't work with a processor you've already added). Built on Google Wallet, it understands loyalty cards, payment method perks, and merchant offers automatically.</p>
-      <p><strong>Why it's trending:</strong> Rolling out in the US this summer in Search and Gemini, with YouTube and Gmail to follow. The cross-platform awareness — knowing what you watched on YouTube and connecting it to purchase intent in Search — is something no competitor can currently replicate at Google's scale.</p>
-      <div class="verdict-box">
-        <span class="verdict-icon">🟢</span>
-        <span class="verdict-text"><strong>Verdict — Signal.</strong> Google has tried commerce before and failed to stick. What's different here is the intelligence layer — this cart manages your purchase rather than just holding items. If adoption sticks, it reshapes Google's revenue story from "ad clicks to purchase" to a closed-loop commerce platform, directly threatening Amazon.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 7. ASK YOUTUBE + DOCS LIVE -->
-  <div class="topic">
-    <img
-      class="topic-image"
-      src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Ask_YouTube_Results_.width-100.format-webp.webp"
-      alt="Ask YouTube — conversational video search"
-    />
-    <div class="topic-image-caption">Ask YouTube: conversational queries, instant relevant clip jumps — no more digging through video timelines. © Google 2026</div>
-    <div class="topic-header">
-      <div class="topic-header-left">
-        <div class="topic-num">Topic 7</div>
-        <h3>Ask YouTube & Docs Live — Voice as the New Interface</h3>
-      </div>
-      <span class="badge signal">🟢 Signal</span>
-    </div>
-    <div class="topic-body">
-      <p><strong>What:</strong> Two standout UX upgrades signal a broader shift. <strong>Ask YouTube</strong> reimagines YouTube search: conversational queries with follow-ups, finding the exact moment in a video that answers your question — not just a list of videos. <strong>Docs Live</strong> lets you brain-dump ideas verbally; Gemini turns the stream-of-consciousness into a structured document in real-time. Similar voice-to-structure features are coming to Gmail and Google Keep this summer.</p>
-      <p><strong>Why it's trending:</strong> Ask YouTube is testing now for Premium subscribers at youtube.com/new, rolling out broadly across the US this summer. Docs Live hits AI Pro/Ultra subscribers this summer. The underlying audio models have crossed a quality threshold — these understand intent from messy verbal input, not just transcription with a formatting layer.</p>
-      <div class="verdict-box">
-        <span class="verdict-icon">🟢</span>
-        <span class="verdict-text"><strong>Verdict — Signal.</strong> Voice interfaces have failed for decades because the output was bad. With frontier-grade audio understanding, that barrier is finally falling. Docs Live in particular has real productivity implications for anyone who thinks faster than they type.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 8. TPU 8 + CAPEX -->
-  <div class="topic">
-    <img
-      class="topic-image"
-      src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/two_chips_for_the_agentic_era_her.width-600.format-webp.webp"
-      alt="TPU 8t and TPU 8i — Google's 8th generation AI chips"
-    />
-    <div class="topic-image-caption">TPU 8t (training) and TPU 8i (inference) — the two-chip strategy for the agentic era. © Google 2026</div>
-    <div class="topic-header">
-      <div class="topic-header-left">
-        <div class="topic-num">Topic 8</div>
-        <h3>$180B Capex & TPU 8 — Google Is Building the AI Substrate</h3>
-      </div>
-      <span class="badge signal">🟢 Signal</span>
-    </div>
-    <div class="topic-body">
-      <p><strong>What:</strong> Google announced expected 2026 capital expenditure of <strong>$180–190B</strong> — roughly 6× what it spent in 2022. The 8th generation of TPUs splits into two specialized chips: <strong>TPU 8t</strong> for training (3× raw compute vs. prior gen, scaling to more than 1 million TPUs globally across multiple data centers) and <strong>TPU 8i</strong> for inference (dramatically lower latency, 2× better performance-per-watt). Both are already serving Gemini 3.5 Flash at 19 billion tokens per minute.</p>
-      <p><strong>Why it's trending:</strong> The scale of infrastructure spend here is staggering. Training distributed across 1M+ TPUs means Google can create the largest training cluster in the world — building in weeks what would otherwise take months. This is foundational to who gets to train the next generation of models.</p>
-
-      <div class="chart-wrap">
-        <div class="chart-title">Google Annual Capex — AI Infrastructure Investment</div>
-        <div class="bar-chart">
-          <div class="bar-row">
-            <div class="bar-label">2022</div>
-            <div class="bar-track">
-              <div class="bar-fill" style="width:17%; background: rgba(66,133,244,0.35);">
-                <span class="bar-val">$31B</span>
-              </div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">2023 (est.)</div>
-            <div class="bar-track">
-              <div class="bar-fill" style="width:25%; background: rgba(66,133,244,0.45);">
-                <span class="bar-val">~$45B</span>
-              </div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">2024 (est.)</div>
-            <div class="bar-track">
-              <div class="bar-fill" style="width:42%; background: rgba(66,133,244,0.6);">
-                <span class="bar-val">~$75B</span>
-              </div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">2026 (projected)</div>
-            <div class="bar-track">
-              <div class="bar-fill" style="width:100%; background: linear-gradient(90deg, #4285F4, #7eb3ff);">
-                <span class="bar-val">$180–190B</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p style="font-size:12px;color:#666;margin-top:14px;">Source: Sundar Pichai, Google I/O 2026 keynote. 2022 figure is confirmed; intermediate years estimated for visual comparison.</p>
-      </div>
-
-      <div class="verdict-box">
-        <span class="verdict-icon">🟢</span>
-        <span class="verdict-text"><strong>Verdict — Signal.</strong> Infrastructure spend of this magnitude is a multi-year moat. Google's vertically integrated approach — custom silicon, custom training stack (JAX/Pathways), and billion-user products to run it through — is a compound advantage that's very difficult to replicate.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ONES TO WATCH -->
-  <h2 class="section-title">Ones to Watch 👀</h2>
-  <div class="section-divider"></div>
-  <p style="color:#999; margin-bottom: 20px;">Early-stage developments that didn't make the main list but are worth monitoring closely over the next 6 months.</p>
-  <div class="watch-grid">
-    <div class="watch-card">
-      <div class="watch-icon">🧬</div>
-      <h4>Gemini for Science</h4>
-      <p>A new AI research acceleration platform connecting Gemini's reasoning to 30+ major life science databases. Co-Scientist, an AI research partner, is available now on Google Labs. The implications for drug discovery and materials science are enormous — but domain-specific validation is still needed at scale.</p>
-    </div>
-    <div class="watch-card">
-      <div class="watch-icon">🌍</div>
-      <h4>Project Genie + Street View</h4>
-      <p>Google DeepMind's Project Genie can now simulate real-world places using Street View data — generating interactive, navigable environments from 2D imagery. Applications in training robotics, city planning, and immersive search are beginning to be explored. An early-stage bet on the future of world models.</p>
-    </div>
-    <div class="watch-card">
-      <div class="watch-icon">🖼️</div>
-      <h4>Google Pics</h4>
-      <p>A new standalone AI image creation and editing tool built on the Nano Banana model. Unlike flat image editors, Pics treats every element as an independent object — swap, edit, or refine specific parts. Rolling out to AI Pro/Ultra in Workspace this summer. Potential to challenge Adobe in casual creative work.</p>
-    </div>
-  </div>
-
-  <!-- 35-MINUTE RECAP VIDEO -->
-  <div style="margin: 48px 0 0;">
-    <div class="video-wrap">
-      <div class="video-label"><span class="dot"></span> Google I/O 2026 — Keynote in 35 Minutes (Quick Recap)</div>
-      <iframe
-        src="https://www.youtube.com/embed/OMhKgQmeMhI"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-        title="Google I/O 2026 Keynote in 35 Minutes">
-      </iframe>
-    </div>
-  </div>
-
-  <!-- TOKEN GROWTH CHART -->
-  <div class="chart-wrap" style="margin: 40px 0 48px;">
-    <div class="chart-title">Monthly Tokens Processed Across Google Surfaces — The Scale of AI Adoption</div>
-    <div class="bar-chart">
-      <div class="bar-row">
-        <div class="bar-label">May 2024</div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:0.5%; background: rgba(66,133,244,0.3); min-width: 70px;">
-            <span class="bar-val">9.7 trillion</span>
-          </div>
-        </div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label">May 2025</div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:15%; background: rgba(66,133,244,0.55);">
-            <span class="bar-val">480 trillion</span>
-          </div>
-        </div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label">May 2026</div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:100%; background: linear-gradient(90deg, #4285F4, #34A853);">
-            <span class="bar-val">3.2+ quadrillion (7× YoY growth)</span>
-          </div>
+    <div class="btn-row">
+      <a href="https://io.google/2026/" target="_blank" rel="noopener" class="btn-primary">Watch Live →</a>
+      <a href="#schedule" class="btn-secondary">View Schedule</a>
+      <div class="cal-wrap" id="hero-cal">
+        <button class="btn-cal" onclick="toggleCal(event,'hero-cal')">📅 Add to Calendar</button>
+        <div class="cal-dropdown">
+          <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+Keynote&dates=20260519T170000Z%2F20260519T184500Z&details=Google+I%2FO+2026+Opening+Keynote.+Watch+live+at+https%3A%2F%2Fio.google%2F2026%2F+and+YouTube.+Gemini+4%2C+Project+Astra%2C+Android+17+%26+more.&location=Shoreline+Amphitheatre%2C+Mountain+View%2C+CA+%26+io.google+livestream" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+          <a class="cal-option" href="#" onclick="downloadICS(event,'keynote')">🍎&nbsp; Apple Calendar (.ics)</a>
+          <a class="cal-option" href="#" onclick="downloadICS(event,'keynote')">📆&nbsp; Outlook (.ics)</a>
         </div>
       </div>
     </div>
-    <p style="font-size:12px;color:#666;margin-top:14px;">Source: Sundar Pichai, Google I/O 2026 keynote. Chart scaled for visual contrast — actual growth is exponential.</p>
   </div>
 
-  <!-- TAKEAWAY -->
-  <div class="takeaway">
-    <h2>This Week's Takeaway</h2>
-    <p>
-      Google I/O 2026 tells a single coherent story: we are moving from AI as a tool you prompt to AI as an agent that acts. Gemini Spark, Information Agents in Search, agentic shopping via Universal Cart, and voice-driven creation in Docs Live are all expressions of the same thesis — the best interface is the one that disappears. What makes this I/O different from previous years is the combination of breadth and specificity: these aren't vague roadmap promises, they are shipping products with dates. The hardware play — smart glasses designed by Warby Parker and Gentle Monster with Gemini inside — suggests Google has learned from the Glass debacle and is this time threading the needle between utility and wearability. The $180B infrastructure bet is the clearest signal of all: Google doesn't think it's in a race it can afford to lose, and it's spending accordingly. Over the next 6–12 months, the question isn't whether these products will arrive — it's whether users will adopt them at the scale Google needs. That's where things get interesting.
+  <div class="countdown-strip" id="countdown-strip">
+    <div class="cd-unit"><div class="cd-num" id="cd-days">8</div><div class="cd-lbl">Days</div></div>
+    <div class="cd-unit"><div class="cd-num" id="cd-hours">--</div><div class="cd-lbl">Hours</div></div>
+    <div class="cd-unit"><div class="cd-num" id="cd-mins">--</div><div class="cd-lbl">Minutes</div></div>
+    <div class="cd-unit"><div class="cd-num" id="cd-secs">--</div><div class="cd-lbl">Seconds</div></div>
+  </div>
+</header>
+
+<!-- ═══════════════════════ INTRO IMAGE ══════════════════ -->
+<section style="padding-bottom: 0;">
+  <div class="container">
+    <div class="img-hero">
+      <img
+        src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Google-IO-2023.width-1600.jpg"
+        alt="Google I/O developer conference stage"
+        onerror="this.parentElement.style.background='linear-gradient(135deg,#1a73e8,#0d47a1)';this.style.display='none';"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ STATS ════════════════════════ -->
+<section>
+  <div class="container">
+    <div class="stat-bar">
+      <div class="stat">
+        <div class="stat-num g-blue">2</div>
+        <div class="stat-desc">Full days of sessions</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num g-green">100+</div>
+        <div class="stat-desc">Technical sessions &amp; workshops</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num g-red">1M+</div>
+        <div class="stat-desc">Live stream viewers expected</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num g-yellow">10 AM</div>
+        <div class="stat-desc">PT · Keynote kick-off time</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ WHAT'S COMING ════════════════ -->
+<section id="whats-coming">
+  <div class="container">
+    <div class="section-label">What to expect</div>
+    <h2>Five reasons the AI world is watching</h2>
+    <p class="section-intro">
+      Google I/O 2026 isn't just a product refresh — it's the clearest signal yet of where the AI industry is heading.
+      Here's what has the tech world buzzing.
     </p>
+
+    <div class="cards">
+
+      <!-- Gemini 4 -->
+      <div class="card">
+        <img
+          class="card-img"
+          src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/gemini-advanced-1600x900.width-1600.jpg"
+          alt="Google Gemini AI model"
+          onerror="this.parentElement.innerHTML = this.parentElement.innerHTML.replace(/<img[^>]*>/,''); this.parentElement.insertAdjacentHTML('afterbegin','<div class=\'card-img-placeholder\' style=\'background:linear-gradient(135deg,#1a73e8 0%,#1a237e 100%);\'>🤖</div>');"
+        />
+        <div class="card-body">
+          <span class="card-tag tag-blue">AI Models</span>
+          <h3>Gemini 4.0 — The next frontier</h3>
+          <p>Google's most capable flagship model yet promises faster reasoning, richer multimodal understanding, and deep integration across every Google product. Early leaks hint at an Auto-Run agentic mode and persistent memory across sessions.</p>
+        </div>
+      </div>
+
+      <!-- Project Astra -->
+      <div class="card">
+        <img
+          class="card-img"
+          src="https://storage.googleapis.com/deepmind-media/gemini/project-astra-blog-image.jpg"
+          alt="Project Astra AI glasses"
+          onerror="this.src='https://lh3.googleusercontent.com/8kSwuOC2Zf0M2ydSVwbPEWLZ7T4gLzJVaEkBfpMNZrPKJEHXFhLdw_wYNHv2e-DAnPJMBX3FnnXAfk7LkIqM7_uaAP-=w2048';"
+        />
+        <div class="card-body">
+          <span class="card-tag tag-green">Hardware</span>
+          <h3>Project Astra — AI glasses go real</h3>
+          <p>Google's multimodal universal assistant is expected to make its consumer debut — or at least reveal a developer kit — for AI-powered smart glasses. See the world through Gemini's eyes, literally.</p>
+        </div>
+      </div>
+
+      <!-- Android 17 -->
+      <div class="card">
+        <img
+          class="card-img"
+          src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/android-hero.width-1600.jpg"
+          alt="Android 17 operating system"
+          onerror="this.parentElement.innerHTML = this.parentElement.innerHTML.replace(/<img[^>]*>/,''); this.parentElement.insertAdjacentHTML('afterbegin','<div class=\'card-img-placeholder\' style=\'background:linear-gradient(135deg,#34a853 0%,#1b5e20 100%);\'>🤖</div>');"
+        />
+        <div class="card-body">
+          <span class="card-tag tag-green">Android</span>
+          <h3>Android 17 — The AI-native OS</h3>
+          <p>Rumoured to be the first operating system built entirely around an AI core, Android 17 positions Gemini not as an app, but as the intelligence layer beneath the entire OS. This could reshape what a smartphone <em>is</em>.</p>
+        </div>
+      </div>
+
+      <!-- Agentic AI -->
+      <div class="card">
+        <div class="card-img-placeholder" style="background: linear-gradient(135deg, #6a1b9a 0%, #311b92 100%); color: white;">⚡</div>
+        <div class="card-body">
+          <span class="card-tag tag-red">Agentic AI</span>
+          <h3>AI that just… does things for you</h3>
+          <p>Forget prompting. Google is expected to unveil agentic AI capabilities where Gemini books your flights, manages your calendar, and handles multi-step tasks — autonomously. The era of AI assistants that assist passively is ending.</p>
+        </div>
+      </div>
+
+      <!-- Gemini Omni -->
+      <div class="card">
+        <div class="card-img-placeholder" style="background: linear-gradient(135deg, #1a73e8 0%, #8ab4f8 100%); color: white;">🎬</div>
+        <div class="card-body">
+          <span class="card-tag tag-blue">Multimodal</span>
+          <h3>Gemini Omni — Unified everything</h3>
+          <p>A leaked Gemini Omni model spotted inside Google's video interface just days before I/O suggests a unified model spanning text, images, audio, and video generation. One model to rule them all?</p>
+        </div>
+      </div>
+
+      <!-- Developer Stack -->
+      <div class="card">
+        <div class="card-img-placeholder" style="background: linear-gradient(135deg, #f9ab00 0%, #e37400 100%); color: white;">🛠</div>
+        <div class="card-body">
+          <span class="card-tag tag-yellow">Developers</span>
+          <h3>Google's end-to-end AI stack</h3>
+          <p>Confirmed I/O sessions will cover Google's full developer toolkit: from robotics to real-time media generation. If you build with AI, this is your Super Bowl Sunday.</p>
+        </div>
+      </div>
+
+    </div>
   </div>
+</section>
 
-</div><!-- /container -->
+<!-- ═══════════════════════ AGENTIC DEEP DIVE ════════════ -->
+<section style="background: var(--mid);">
+  <div class="container">
+    <div class="split">
+      <div>
+        <img
+          class="split-img"
+          src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&q=80"
+          alt="Abstract AI neural network visualisation"
+          onerror="this.style.background='linear-gradient(135deg,#1a73e8,#311b92)'; this.style.height='400px'; this.removeAttribute('src');"
+        />
+      </div>
+      <div class="split-text">
+        <div class="section-label">The big shift</div>
+        <h2>From assistant to agent</h2>
+        <p>The most important theme of I/O 2026 isn't any single product — it's a paradigm shift. AI is moving from a tool you talk to into a system that acts on your behalf.</p>
+        <p>Google's agentic push at this year's conference is expected to include:</p>
+        <ul class="bullet-list">
+          <li>Auto-Run mode: give Gemini a goal, walk away</li>
+          <li>Persistent memory that learns your preferences over time</li>
+          <li>Deep integration with Google Workspace for autonomous task completion</li>
+          <li>Android 17 as a wrapper for Gemini-native experiences</li>
+          <li>Cross-app agents that operate across your entire digital life</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
-<!-- FOOTER -->
+<!-- ═══════════════════════ QUOTE ════════════════════════ -->
+<section>
+  <div class="container">
+    <div class="quote-block">
+      <blockquote>
+        "We're moving from models that answer questions to models that get things done. Google I/O 2026 is where that transition becomes real."
+      </blockquote>
+      <cite>— Industry analysis ahead of Google I/O 2026</cite>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FULL SCHEDULE ════════════════ -->
+<section id="schedule" style="background: var(--mid);">
+  <div class="container">
+    <div class="schedule-header">
+      <div>
+        <div class="section-label">Full Programme · May 19–20</div>
+        <h2>The complete schedule</h2>
+        <p class="section-intro" style="margin-bottom:0;">Click any session to see what's covered, why it matters, and add it to your calendar.</p>
+      </div>
+      <div class="cal-wrap" id="full-cal" style="flex-shrink:0;">
+        <button class="btn-cal" onclick="toggleCal(event,'full-cal')">📅 Add Full Conference</button>
+        <div class="cal-dropdown">
+          <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026&dates=20260519T170000Z%2F20260520T233000Z&details=Google+I%2FO+2026+%E2%80%94+Two+days+of+AI%2C+Android%2C+Chrome%2C+Cloud+and+more.+Watch+live+at+https%3A%2F%2Fio.google%2F2026%2F&location=Shoreline+Amphitheatre%2C+Mountain+View%2C+CA+%26+io.google" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+          <a class="cal-option" href="#" onclick="downloadICS(event,'conference')">🍎&nbsp; Apple Calendar (.ics)</a>
+          <a class="cal-option" href="#" onclick="downloadICS(event,'conference')">📆&nbsp; Outlook (.ics)</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-tabs" role="tablist">
+      <button class="day-tab active" onclick="switchDay(event,'day1')" role="tab">📅 Day 1 — May 19</button>
+      <button class="day-tab" onclick="switchDay(event,'day2')" role="tab">📅 Day 2 — May 20</button>
+    </div>
+
+    <!-- ── DAY 1 ── -->
+    <div class="day-panel active" id="day1">
+      <div class="session-list">
+
+        <!-- Keynote -->
+        <div class="session-card" id="s-keynote">
+          <div class="session-header" onclick="toggleSession('s-keynote')">
+            <div class="session-time">10:00 – 11:45 AM</div>
+            <div class="session-dot" style="background:#1a73e8;"></div>
+            <div class="session-title-group">
+              <div class="session-title">Google Keynote</div>
+              <div class="session-subtitle">Shoreline Amphitheatre &amp; io.google Livestream</div>
+            </div>
+            <div class="session-badges">
+              <span class="s-badge s-live">🔴 Live</span>
+              <span class="s-badge s-blue">AI</span>
+              <span class="s-badge s-green">Android</span>
+            </div>
+            <div class="session-chevron">▼</div>
+          </div>
+          <div class="session-body">
+            <div class="session-body-inner">
+              <p>The main event. Google's CEO and product leadership take the Shoreline Amphitheatre stage to unveil the biggest announcements of the year. This is where Gemini 4.0, Project Astra hardware, and Android 17 are all expected to make their debut. Everything that follows at I/O builds on what's revealed here — don't miss the opening 105 minutes.</p>
+              <ul>
+                <li>Gemini 4.0 model announcement — faster reasoning, richer multimodal understanding</li>
+                <li>Project Astra: AI-powered smart glasses — consumer reveal or developer kit</li>
+                <li>Android 17 debut — the AI-native operating system</li>
+                <li>Agentic AI: Auto-Run mode and persistent memory across sessions</li>
+                <li>Gemini Omni: unified text, image, audio, and video model</li>
+              </ul>
+              <div class="session-body-footer">
+                <a class="session-watch-link" href="https://io.google/2026/" target="_blank" rel="noopener">▶ Watch at io.google</a>
+                <span style="color:var(--muted);font-size:.8rem;">Also on YouTube</span>
+                <div class="cal-sm-wrap" id="c-keynote">
+                  <button class="btn-cal-sm" onclick="toggleCal(event,'c-keynote')">📅 Add to Calendar</button>
+                  <div class="cal-dropdown">
+                    <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+Keynote&dates=20260519T170000Z%2F20260519T184500Z&details=Google+I%2FO+2026+Opening+Keynote.+Gemini+4%2C+Project+Astra%2C+Android+17+%26+more.+Watch+live+at+io.google&location=Shoreline+Amphitheatre+%26+io.google+livestream" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+                    <a class="cal-option" href="#" onclick="downloadICS(event,'keynote')">🍎&nbsp; Apple / Outlook (.ics)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Developer Keynote -->
+        <div class="session-card" id="s-devkey">
+          <div class="session-header" onclick="toggleSession('s-devkey')">
+            <div class="session-time">1:30 – 2:45 PM</div>
+            <div class="session-dot" style="background:#34a853;"></div>
+            <div class="session-title-group">
+              <div class="session-title">Developer Keynote</div>
+              <div class="session-subtitle">io.google Livestream</div>
+            </div>
+            <div class="session-badges">
+              <span class="s-badge s-live">🔴 Live</span>
+              <span class="s-badge s-blue">Developers</span>
+              <span class="s-badge s-blue">AI APIs</span>
+            </div>
+            <div class="session-chevron">▼</div>
+          </div>
+          <div class="session-body">
+            <div class="session-body-inner">
+              <p>The builders' keynote — Google engineering leads walk through the full updated AI developer stack. Unlike the main keynote's broad product focus, this session goes deep on APIs, SDKs, and exactly what ships for developers the moment it ends. Confirmed focus: agentic coding workflows and Gemini model capabilities.</p>
+              <ul>
+                <li>Gemini API updates and new model tiers</li>
+                <li>Agentic coding: Gemini inside your development workflow</li>
+                <li>AI Studio new features and expanded access</li>
+                <li>SDK previews and breaking changes to watch</li>
+                <li>Live demos of what ships immediately post-keynote</li>
+              </ul>
+              <div class="session-body-footer">
+                <a class="session-watch-link" href="https://io.google/2026/explore/developer-keynote-1" target="_blank" rel="noopener">▶ Session Page</a>
+                <div class="cal-sm-wrap" id="c-devkey">
+                  <button class="btn-cal-sm" onclick="toggleCal(event,'c-devkey')">📅 Add to Calendar</button>
+                  <div class="cal-dropdown">
+                    <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+Developer+Keynote&dates=20260519T203000Z%2F20260519T214500Z&details=Google+I%2FO+2026+Developer+Keynote.+AI+APIs%2C+agentic+coding%2C+Gemini+SDK+updates.&location=io.google+livestream" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+                    <a class="cal-option" href="#" onclick="downloadICS(event,'devkey')">🍎&nbsp; Apple / Outlook (.ics)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI & Multimodal -->
+        <div class="session-card" id="s-ai">
+          <div class="session-header" onclick="toggleSession('s-ai')">
+            <div class="session-time">3:30 PM · ~45 min</div>
+            <div class="session-dot" style="background:#1a73e8;"></div>
+            <div class="session-title-group">
+              <div class="session-title">AI &amp; Multimodal: What's New</div>
+              <div class="session-subtitle">Breakout Session · Confirmed</div>
+            </div>
+            <div class="session-badges">
+              <span class="s-badge s-blue">AI</span>
+              <span class="s-badge s-purple">Multimodal</span>
+              <span class="s-badge s-teal">Robotics</span>
+            </div>
+            <div class="session-chevron">▼</div>
+          </div>
+          <div class="session-body">
+            <div class="session-body-inner">
+              <p>Google's confirmed breakout session covering the technical depth behind the keynote AI announcements. This is where the model capabilities get unpacked for engineers who want to actually build with them — expect hands-on demonstrations and real API examples.</p>
+              <ul>
+                <li>Multimodal processing: latest capabilities in text, image, audio, and video</li>
+                <li>Real-time media generation — what's now possible and at what latency</li>
+                <li>Robotics integration: Gemini's role in physical AI systems</li>
+                <li>Gemini Omni deep dive: the unified model architecture</li>
+              </ul>
+              <div class="session-body-footer">
+                <div class="cal-sm-wrap" id="c-ai">
+                  <button class="btn-cal-sm" onclick="toggleCal(event,'c-ai')">📅 Add to Calendar</button>
+                  <div class="cal-dropdown">
+                    <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+AI+%26+Multimodal&dates=20260519T223000Z%2F20260519T230000Z&details=AI+%26+Multimodal+session.+Multimodal+processing%2C+media+generation%2C+robotics+and+Gemini+Omni.&location=io.google+livestream" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+                    <a class="cal-option" href="#" onclick="downloadICS(event,'ai')">🍎&nbsp; Apple / Outlook (.ics)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Android 17 -->
+        <div class="session-card" id="s-android">
+          <div class="session-header" onclick="toggleSession('s-android')">
+            <div class="session-time">TBD · ~45 min</div>
+            <div class="session-dot" style="background:#34a853;"></div>
+            <div class="session-title-group">
+              <div class="session-title">Android 17: Platform Deep Dive</div>
+              <div class="session-subtitle">Breakout Session · Confirmed</div>
+            </div>
+            <div class="session-badges">
+              <span class="s-badge s-green">Android</span>
+              <span class="s-badge s-yellow">Performance</span>
+            </div>
+            <div class="session-chevron">▼</div>
+          </div>
+          <div class="session-body">
+            <div class="session-body-inner">
+              <p>A dedicated 45-minute technical session on Android 17, confirmed by Google in the published sessions list. This goes far beyond the keynote announcement — it's the full developer-facing breakdown of what changed, what broke, and what to update in your app before the OS ships.</p>
+              <ul>
+                <li>Performance improvements: what changed under the hood</li>
+                <li>Media and camera APIs: new features and deprecations</li>
+                <li>Desktop and large-screen application enhancements</li>
+                <li>Automation features: the Gemini integration layer</li>
+                <li>Migration guidance: what needs updating before GA</li>
+              </ul>
+              <div class="session-body-footer">
+                <div class="cal-sm-wrap" id="c-android">
+                  <button class="btn-cal-sm" onclick="toggleCal(event,'c-android')">📅 Add to Calendar</button>
+                  <div class="cal-dropdown">
+                    <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+Android+17+Deep+Dive&dates=20260519T170000Z%2F20260520T000000Z&details=Android+17+platform+deep+dive.+Performance%2C+media+APIs%2C+large-screen%2C+automation+features.&location=io.google+livestream" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+                    <a class="cal-option" href="#" onclick="downloadICS(event,'android')">🍎&nbsp; Apple / Outlook (.ics)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chrome -->
+        <div class="session-card" id="s-chrome">
+          <div class="session-header" onclick="toggleSession('s-chrome')">
+            <div class="session-time">TBD · Session</div>
+            <div class="session-dot" style="background:#fbbc04;"></div>
+            <div class="session-title-group">
+              <div class="session-title">Chrome &amp; Web Platform 2026</div>
+              <div class="session-subtitle">Breakout Session · Confirmed</div>
+            </div>
+            <div class="session-badges">
+              <span class="s-badge s-yellow">Chrome</span>
+              <span class="s-badge s-blue">Web</span>
+            </div>
+            <div class="session-chevron">▼</div>
+          </div>
+          <div class="session-body">
+            <div class="session-body-inner">
+              <p>New browser features and developer APIs planned for Chrome in 2026. Confirmed in Google's published sessions list, this session covers where the open web platform is heading — new capabilities landing in Chrome, performance tooling, and the APIs that unlock genuinely new types of web experiences.</p>
+              <ul>
+                <li>New browser APIs shipping to Chrome in 2026</li>
+                <li>Web performance improvements and Core Web Vitals updates</li>
+                <li>Progressive Web App (PWA) enhancements</li>
+                <li>AI-powered developer tooling inside Chrome DevTools</li>
+              </ul>
+              <div class="session-body-footer">
+                <div class="cal-sm-wrap" id="c-chrome">
+                  <button class="btn-cal-sm" onclick="toggleCal(event,'c-chrome')">📅 Add to Calendar</button>
+                  <div class="cal-dropdown">
+                    <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+Chrome+%26+Web+Platform&dates=20260519T170000Z%2F20260520T000000Z&details=Chrome+%26+Web+Platform+2026.+New+browser+APIs%2C+performance+improvements%2C+PWA+updates.&location=io.google+livestream" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+                    <a class="cal-option" href="#" onclick="downloadICS(event,'chrome')">🍎&nbsp; Apple / Outlook (.ics)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Google Play -->
+        <div class="session-card" id="s-play">
+          <div class="session-header" onclick="toggleSession('s-play')">
+            <div class="session-time">TBD · Session</div>
+            <div class="session-dot" style="background:#34a853;"></div>
+            <div class="session-title-group">
+              <div class="session-title">Google Play: Building for Growth</div>
+              <div class="session-subtitle">Breakout Session · Confirmed</div>
+            </div>
+            <div class="session-badges">
+              <span class="s-badge s-green">Google Play</span>
+              <span class="s-badge s-green">Android</span>
+            </div>
+            <div class="session-chevron">▼</div>
+          </div>
+          <div class="session-body">
+            <div class="session-body-inner">
+              <p>Google's confirmed session aimed squarely at developers and businesses building on the Google Play platform. Covers the commercial and distribution side of Android development — how to reach more users, monetise effectively, and stay compliant with updated policies.</p>
+              <ul>
+                <li>New distribution tools and discovery features</li>
+                <li>Monetisation API updates for subscriptions and in-app purchases</li>
+                <li>Policy updates and compliance guidance for 2026</li>
+                <li>Play's AI-powered review and release tooling</li>
+              </ul>
+              <div class="session-body-footer">
+                <div class="cal-sm-wrap" id="c-play">
+                  <button class="btn-cal-sm" onclick="toggleCal(event,'c-play')">📅 Add to Calendar</button>
+                  <div class="cal-dropdown">
+                    <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+Google+Play&dates=20260519T170000Z%2F20260520T000000Z&details=Google+Play+session.+Distribution%2C+monetisation%2C+policy+updates.&location=io.google+livestream" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+                    <a class="cal-option" href="#" onclick="downloadICS(event,'play')">🍎&nbsp; Apple / Outlook (.ics)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dialogues -->
+        <div class="session-card" id="s-dialogues">
+          <div class="session-header" onclick="toggleSession('s-dialogues')">
+            <div class="session-time">TBD · Session</div>
+            <div class="session-dot" style="background:#ea4335;"></div>
+            <div class="session-title-group">
+              <div class="session-title">Dialogues: AI &amp; Society</div>
+              <div class="session-subtitle">Structured Expert Discussion · Confirmed Format</div>
+            </div>
+            <div class="session-badges">
+              <span class="s-badge s-live" style="background:rgba(234,67,53,.12);color:#f28b82;">Policy</span>
+              <span class="s-badge s-blue">AI</span>
+            </div>
+            <div class="session-chevron">▼</div>
+          </div>
+          <div class="session-body">
+            <div class="session-body-inner">
+              <p>The Dialogues format returns for 2026 — Google's structured, moderated discussions with experts about how AI is reshaping software, platforms, and society at large. Less product demo, more big-picture thinking. Essential viewing for product strategists, CTOs, and anyone who needs to understand where AI's broader trajectory is heading.</p>
+              <ul>
+                <li>AI governance and responsible deployment at scale</li>
+                <li>How agentic AI changes the relationship between humans and software</li>
+                <li>The future of creativity, knowledge work, and the developer role</li>
+                <li>Open discussion format with audience Q&amp;A</li>
+              </ul>
+              <div class="session-body-footer">
+                <div class="cal-sm-wrap" id="c-dialogues">
+                  <button class="btn-cal-sm" onclick="toggleCal(event,'c-dialogues')">📅 Add to Calendar</button>
+                  <div class="cal-dropdown">
+                    <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+Dialogues%3A+AI+%26+Society&dates=20260519T170000Z%2F20260520T000000Z&details=Dialogues+session+on+AI+%26+Society.+Expert+discussions+on+AI%27s+broader+impact.&location=io.google+livestream" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+                    <a class="cal-option" href="#" onclick="downloadICS(event,'dialogues')">🍎&nbsp; Apple / Outlook (.ics)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /session-list -->
+    </div><!-- /day1 -->
+
+    <!-- ── DAY 2 ── -->
+    <div class="day-panel" id="day2">
+      <div class="session-list">
+
+        <!-- Adaptive Everywhere -->
+        <div class="session-card" id="s-adaptive">
+          <div class="session-header" onclick="toggleSession('s-adaptive')">
+            <div class="session-time">TBD · ~45 min</div>
+            <div class="session-dot" style="background:#34a853;"></div>
+            <div class="session-title-group">
+              <div class="session-title">Android 17: Adaptive Everywhere</div>
+              <div class="session-subtitle">Breakout Session · Confirmed</div>
+            </div>
+            <div class="session-badges">
+              <span class="s-badge s-green">Android</span>
+              <span class="s-badge s-teal">XR</span>
+              <span class="s-badge s-purple">ChromeOS</span>
+            </div>
+            <div class="session-chevron">▼</div>
+          </div>
+          <div class="session-body">
+            <div class="session-body-inner">
+              <p>Google's confirmed Day 2 session on the "Adaptive Everywhere" strategy — how Android 17 enables seamless transitions across phone, car, living room, and immersive XR environments. This covers the unified Android + ChromeOS + XR platform vision that goes beyond the standard Android release cycle.</p>
+              <ul>
+                <li>Unified platform: Android, ChromeOS and XR under one architecture</li>
+                <li>Phone-to-car-to-TV-to-XR continuity: how handoff actually works</li>
+                <li>Android XR developer guidance and API overview</li>
+                <li>Building apps that adapt to form factor — not just screen size</li>
+              </ul>
+              <div class="session-body-footer">
+                <div class="cal-sm-wrap" id="c-adaptive">
+                  <button class="btn-cal-sm" onclick="toggleCal(event,'c-adaptive')">📅 Add to Calendar</button>
+                  <div class="cal-dropdown">
+                    <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+Android+17%3A+Adaptive+Everywhere&dates=20260520T170000Z%2F20260520T180000Z&details=Android+17+Adaptive+Everywhere.+Unified+Android%2FChromeOS%2FXR+platform+strategy.&location=io.google+livestream" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+                    <a class="cal-option" href="#" onclick="downloadICS(event,'adaptive')">🍎&nbsp; Apple / Outlook (.ics)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Firebase -->
+        <div class="session-card" id="s-firebase">
+          <div class="session-header" onclick="toggleSession('s-firebase')">
+            <div class="session-time">TBD · Session</div>
+            <div class="session-dot" style="background:#fbbc04;"></div>
+            <div class="session-title-group">
+              <div class="session-title">Firebase: The Agent-Native Platform</div>
+              <div class="session-subtitle">Breakout Session · Confirmed</div>
+            </div>
+            <div class="session-badges">
+              <span class="s-badge s-yellow">Firebase</span>
+              <span class="s-badge s-blue">AI</span>
+              <span class="s-badge s-blue">Backend</span>
+            </div>
+            <div class="session-chevron">▼</div>
+          </div>
+          <div class="session-body">
+            <div class="session-body-inner">
+              <p>Firebase is evolving into an agent-native development platform — one of the most significant architectural shifts in Google's developer tools in years. This session covers the new integrations with AI Studio and a new tool called Antigravity for building full-stack AI applications. Essential for any developer building agentic backends.</p>
+              <ul>
+                <li>Firebase's new agent-native architecture and what it means</li>
+                <li>AI Studio integration: connecting models to backend logic</li>
+                <li>Antigravity: the new tool for full-stack agentic apps</li>
+                <li>Real-time, stateful agents — how Firebase handles memory and context</li>
+                <li>Migration path from existing Firebase projects</li>
+              </ul>
+              <div class="session-body-footer">
+                <div class="cal-sm-wrap" id="c-firebase">
+                  <button class="btn-cal-sm" onclick="toggleCal(event,'c-firebase')">📅 Add to Calendar</button>
+                  <div class="cal-dropdown">
+                    <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+Firebase+Agent-Native+Platform&dates=20260520T170000Z%2F20260520T180000Z&details=Firebase+agent-native+platform.+AI+Studio+integration%2C+Antigravity+tool+for+full-stack+agentic+apps.&location=io.google+livestream" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+                    <a class="cal-option" href="#" onclick="downloadICS(event,'firebase')">🍎&nbsp; Apple / Outlook (.ics)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flutter -->
+        <div class="session-card" id="s-flutter">
+          <div class="session-header" onclick="toggleSession('s-flutter')">
+            <div class="session-time">TBD · Session</div>
+            <div class="session-dot" style="background:#1a73e8;"></div>
+            <div class="session-title-group">
+              <div class="session-title">Flutter &amp; GenUI: AI-Powered UIs</div>
+              <div class="session-subtitle">Breakout Session · Confirmed</div>
+            </div>
+            <div class="session-badges">
+              <span class="s-badge s-blue">Flutter</span>
+              <span class="s-badge s-purple">UI/UX</span>
+            </div>
+            <div class="session-chevron">▼</div>
+          </div>
+          <div class="session-body">
+            <div class="session-body-inner">
+              <p>Flutter's confirmed session covers the framework's performance improvements and introduces Flutter GenUI — a system for building adaptive, AI-generated user experiences. The session includes live demos of GenUI generating UI components dynamically based on user context and device form factor.</p>
+              <ul>
+                <li>Flutter performance improvements shipping in 2026</li>
+                <li>Flutter GenUI: generating adaptive UI components with AI</li>
+                <li>Cross-platform improvements: iOS, Android, web, desktop parity</li>
+                <li>Live demo: building a GenUI-powered adaptive app in real time</li>
+              </ul>
+              <div class="session-body-footer">
+                <div class="cal-sm-wrap" id="c-flutter">
+                  <button class="btn-cal-sm" onclick="toggleCal(event,'c-flutter')">📅 Add to Calendar</button>
+                  <div class="cal-dropdown">
+                    <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+Flutter+%26+GenUI&dates=20260520T170000Z%2F20260520T180000Z&details=Flutter+%26+GenUI+session.+AI-powered+adaptive+UIs+and+Flutter+performance+updates.&location=io.google+livestream" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+                    <a class="cal-option" href="#" onclick="downloadICS(event,'flutter')">🍎&nbsp; Apple / Outlook (.ics)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Google Cloud -->
+        <div class="session-card" id="s-cloud">
+          <div class="session-header" onclick="toggleSession('s-cloud')">
+            <div class="session-time">TBD · Session</div>
+            <div class="session-dot" style="background:#1a73e8;"></div>
+            <div class="session-title-group">
+              <div class="session-title">Google Cloud &amp; Vertex AI</div>
+              <div class="session-subtitle">Breakout Session · Confirmed</div>
+            </div>
+            <div class="session-badges">
+              <span class="s-badge s-blue">Cloud</span>
+              <span class="s-badge s-blue">Vertex AI</span>
+            </div>
+            <div class="session-chevron">▼</div>
+          </div>
+          <div class="session-body">
+            <div class="session-body-inner">
+              <p>Google Cloud's I/O session for engineering teams building AI at scale. Covers new infrastructure services, Vertex AI production deployment patterns, and the Google Cloud developer integration roadmap for 2026. The practical counterpart to the Gemini model announcements from Day 1.</p>
+              <ul>
+                <li>New Google Cloud services and infrastructure announced at I/O</li>
+                <li>Vertex AI: what's new for production AI deployment</li>
+                <li>Cost and scaling patterns for large-scale Gemini API usage</li>
+                <li>Developer integration patterns: connecting Cloud to Gemini agents</li>
+              </ul>
+              <div class="session-body-footer">
+                <div class="cal-sm-wrap" id="c-cloud">
+                  <button class="btn-cal-sm" onclick="toggleCal(event,'c-cloud')">📅 Add to Calendar</button>
+                  <div class="cal-dropdown">
+                    <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+Google+Cloud+%26+Vertex+AI&dates=20260520T170000Z%2F20260520T180000Z&details=Google+Cloud+and+Vertex+AI+session.+New+services%2C+production+AI+deployment+patterns.&location=io.google+livestream" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+                    <a class="cal-option" href="#" onclick="downloadICS(event,'cloud')">🍎&nbsp; Apple / Outlook (.ics)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Codelabs -->
+        <div class="session-card" id="s-codelabs">
+          <div class="session-header" onclick="toggleSession('s-codelabs')">
+            <div class="session-time">All Day · Codelabs</div>
+            <div class="session-dot" style="background:#ea4335;"></div>
+            <div class="session-title-group">
+              <div class="session-title">Agentic Coding &amp; Hands-On Codelabs</div>
+              <div class="session-subtitle">Interactive Workshop · Confirmed Topic</div>
+            </div>
+            <div class="session-badges">
+              <span class="s-badge s-live" style="background:rgba(234,67,53,.12);color:#f28b82;">Hands-On</span>
+              <span class="s-badge s-blue">AI</span>
+              <span class="s-badge s-yellow">Codelab</span>
+            </div>
+            <div class="session-chevron">▼</div>
+          </div>
+          <div class="session-body">
+            <div class="session-body-inner">
+              <p>A confirmed topic for Day 2 codelabs: agentic coding workflows — how Gemini integrates into development for code generation, debugging, and automation. Codelabs are hands-on, self-paced sessions that run throughout the day. Bring your laptop. All codelabs are also accessible online at io.google.</p>
+              <ul>
+                <li>Building with the Gemini API: hands-on from zero to working agent</li>
+                <li>Agentic coding: Gemini in your IDE and CI/CD pipeline</li>
+                <li>AI Studio → production: deploying your first agent</li>
+                <li>Office hours with Google engineers available throughout</li>
+              </ul>
+              <div class="session-body-footer">
+                <a class="session-watch-link" href="https://io.google/2026/" target="_blank" rel="noopener">↗ Access Codelabs Online</a>
+                <div class="cal-sm-wrap" id="c-codelabs">
+                  <button class="btn-cal-sm" onclick="toggleCal(event,'c-codelabs')">📅 Add to Calendar</button>
+                  <div class="cal-dropdown">
+                    <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+Codelabs+Day&dates=20260520T170000Z%2F20260520T233000Z&details=Agentic+coding+codelabs+and+office+hours+with+Google+engineers.+Accessible+online+at+io.google.&location=io.google" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+                    <a class="cal-option" href="#" onclick="downloadICS(event,'codelabs')">🍎&nbsp; Apple / Outlook (.ics)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /session-list -->
+    </div><!-- /day2 -->
+
+  </div>
+</section>
+
+<!-- ═══════════════════════ HYPE BANNER ══════════════════ -->
+<section>
+  <div class="container">
+    <div class="hype-banner">
+      <h2>Don't miss a moment.</h2>
+      <p>
+        Set your reminder, clear your calendar for May 19 at 10 AM PT, and watch history happen live.
+        This is shaping up to be the most consequential Google I/O in years.
+      </p>
+      <div class="btn-row" style="justify-content:center; position:relative; z-index:1;">
+        <a href="https://io.google/2026/" target="_blank" rel="noopener" class="btn-primary">Register to Watch Free →</a>
+        <div class="cal-wrap" id="banner-cal">
+          <button class="btn-cal" onclick="toggleCal(event,'banner-cal')" style="background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.35);">📅 Add to Calendar</button>
+          <div class="cal-dropdown">
+            <a class="cal-option" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Google+I%2FO+2026+%E2%80%94+Keynote&dates=20260519T170000Z%2F20260519T184500Z&details=Google+I%2FO+2026+Opening+Keynote.+Watch+live+at+io.google+and+YouTube.&location=Shoreline+Amphitheatre+%26+io.google+livestream" target="_blank" rel="noopener">🗓&nbsp; Google Calendar</a>
+            <a class="cal-option" href="#" onclick="downloadICS(event,'keynote')">🍎&nbsp; Apple Calendar (.ics)</a>
+            <a class="cal-option" href="#" onclick="downloadICS(event,'keynote')">📆&nbsp; Outlook (.ics)</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
 <footer>
-  <p style="margin-bottom: 10px;">
-    <strong>Sources:</strong>
-    <a href="https://blog.google/innovation-and-ai/sundar-pichai-io-2026/" target="_blank">Google Blog — Sundar Pichai's I/O 2026 Keynote</a> ·
-    <a href="https://9to5google.com/2026/05/19/google-io-2026-news/" target="_blank">9to5Google — Everything Announced at I/O 2026</a> ·
-    <a href="https://www.tomsguide.com/news/live/google-io-2026-live-news-updates" target="_blank">Tom's Guide Live Blog</a> ·
-    <a href="https://gizmodo.com/google-and-xreals-project-aura-smart-glasses-are-no-longer-a-concept-2000760588" target="_blank">Gizmodo — Project Aura</a> ·
-    <a href="https://blog.google/products-and-platforms/products/shopping/google-shopping-cart/" target="_blank">Google Blog — Universal Cart</a>
+  <p>
+    Written for the AI-Blog · May 11, 2026 ·
+    Sources:
+    <a href="https://io.google/2026/" target="_blank" rel="noopener">Google I/O 2026 official site</a> ·
+    <a href="https://developers.googleblog.com/get-ready-for-google-io-2026/" target="_blank" rel="noopener">Google Developers Blog</a> ·
+    <a href="https://www.tomsguide.com/phones/google-pixel-phones/google-i-o-2026-date-time-potential-announcements-and-everything-else-you-need-to-know" target="_blank" rel="noopener">Tom's Guide</a> ·
+    <a href="https://9to5google.com/2026/04/14/google-i-o-2026-sessions/" target="_blank" rel="noopener">9to5Google</a>
   </p>
-  <p style="color:#555;">© 2026 AI Navigator · Lorenzo Bartolo · Product images courtesy Google LLC &amp; 9to5Google · Published 19 May 2026</p>
 </footer>
+
+<script>
+  /* ── COUNTDOWN ─────────────────────────────────────── */
+  const target = new Date('2026-05-19T17:00:00Z'); // 10 AM PT = 17:00 UTC
+  function tick() {
+    const diff = target - new Date();
+    if (diff <= 0) {
+      document.getElementById('countdown-strip').innerHTML =
+        '<div style="font-size:1.2rem;font-weight:700;color:#34a853">🔴 Google I/O is LIVE right now!</div>';
+      return;
+    }
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins  = Math.floor((diff % 3600000)  / 60000);
+    const secs  = Math.floor((diff % 60000)    / 1000);
+    document.getElementById('cd-days').textContent  = days;
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('cd-mins').textContent  = String(mins).padStart(2,'0');
+    document.getElementById('cd-secs').textContent  = String(secs).padStart(2,'0');
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ── SCHEDULE TABS ─────────────────────────────────── */
+  function switchDay(e, dayId) {
+    document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+    document.getElementById(dayId).classList.add('active');
+  }
+
+  /* ── SESSION ACCORDION ─────────────────────────────── */
+  function toggleSession(id) {
+    const card = document.getElementById(id);
+    const isOpen = card.classList.contains('open');
+    // Close all open cards first
+    document.querySelectorAll('.session-card.open').forEach(c => c.classList.remove('open'));
+    // Toggle the clicked one
+    if (!isOpen) card.classList.add('open');
+  }
+
+  /* ── CALENDAR DROPDOWN ─────────────────────────────── */
+  function toggleCal(e, wrapperId) {
+    e.stopPropagation();
+    const wrap = document.getElementById(wrapperId);
+    const isOpen = wrap.classList.contains('open');
+    // Close all other open dropdowns
+    document.querySelectorAll('.cal-wrap.open').forEach(w => w.classList.remove('open'));
+    if (!isOpen) wrap.classList.add('open');
+  }
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.cal-wrap.open').forEach(w => w.classList.remove('open'));
+  });
+
+  /* ── ICS GENERATOR ─────────────────────────────────── */
+  const icsEvents = {
+    keynote: {
+      title: 'Google I/O 2026 — Keynote',
+      start: '20260519T170000Z',
+      end:   '20260519T184500Z',
+      desc:  'Google I/O 2026 Opening Keynote. Gemini 4, Project Astra, Android 17 & more. Watch live at https://io.google/2026/',
+      loc:   'Shoreline Amphitheatre & io.google livestream'
+    },
+    devkey: {
+      title: 'Google I/O 2026 — Developer Keynote',
+      start: '20260519T203000Z',
+      end:   '20260519T214500Z',
+      desc:  'Developer Keynote: Gemini API, agentic coding, AI Studio updates. https://io.google/2026/',
+      loc:   'io.google livestream'
+    },
+    ai: {
+      title: 'Google I/O 2026 — AI & Multimodal',
+      start: '20260519T223000Z',
+      end:   '20260519T230000Z',
+      desc:  'AI & Multimodal session: multimodal processing, media generation, robotics.',
+      loc:   'io.google livestream'
+    },
+    android: {
+      title: 'Google I/O 2026 — Android 17 Deep Dive',
+      start: '20260519T190000Z',
+      end:   '20260519T195000Z',
+      desc:  'Android 17 platform deep dive. Performance, media APIs, large-screen, automation.',
+      loc:   'io.google livestream'
+    },
+    chrome: {
+      title: 'Google I/O 2026 — Chrome & Web Platform',
+      start: '20260519T200000Z',
+      end:   '20260519T205000Z',
+      desc:  'Chrome & Web Platform 2026. New browser APIs, performance improvements, PWA updates.',
+      loc:   'io.google livestream'
+    },
+    play: {
+      title: 'Google I/O 2026 — Google Play',
+      start: '20260519T213000Z',
+      end:   '20260519T222000Z',
+      desc:  'Google Play: distribution, monetisation, policy updates for 2026.',
+      loc:   'io.google livestream'
+    },
+    dialogues: {
+      title: 'Google I/O 2026 — Dialogues: AI & Society',
+      start: '20260519T220000Z',
+      end:   '20260519T230000Z',
+      desc:  'Dialogues: structured expert discussion on AI\'s broader impact on society and software.',
+      loc:   'io.google livestream'
+    },
+    conference: {
+      title: 'Google I/O 2026 — Full Conference',
+      start: '20260519T170000Z',
+      end:   '20260520T230000Z',
+      desc:  'Google I/O 2026 — Two days of AI, Android, Chrome, Cloud and developer tools. Watch at https://io.google/2026/',
+      loc:   'Shoreline Amphitheatre, Mountain View, CA & io.google'
+    },
+    adaptive: {
+      title: 'Google I/O 2026 — Android 17: Adaptive Everywhere',
+      start: '20260520T170000Z',
+      end:   '20260520T175000Z',
+      desc:  'Android 17 Adaptive Everywhere. Unified Android/ChromeOS/XR platform strategy.',
+      loc:   'io.google livestream'
+    },
+    firebase: {
+      title: 'Google I/O 2026 — Firebase: Agent-Native Platform',
+      start: '20260520T180000Z',
+      end:   '20260520T190000Z',
+      desc:  'Firebase agent-native platform. AI Studio integration, Antigravity tool for full-stack agentic apps.',
+      loc:   'io.google livestream'
+    },
+    flutter: {
+      title: 'Google I/O 2026 — Flutter & GenUI',
+      start: '20260520T190000Z',
+      end:   '20260520T195000Z',
+      desc:  'Flutter & GenUI session. AI-powered adaptive UIs and Flutter performance updates.',
+      loc:   'io.google livestream'
+    },
+    cloud: {
+      title: 'Google I/O 2026 — Google Cloud & Vertex AI',
+      start: '20260520T200000Z',
+      end:   '20260520T210000Z',
+      desc:  'Google Cloud and Vertex AI session. New services, production AI deployment patterns.',
+      loc:   'io.google livestream'
+    },
+    codelabs: {
+      title: 'Google I/O 2026 — Codelabs Day',
+      start: '20260520T170000Z',
+      end:   '20260520T230000Z',
+      desc:  'Agentic coding codelabs and office hours with Google engineers. Access online at io.google.',
+      loc:   'io.google'
+    }
+  };
+
+  function downloadICS(e, key) {
+    e.preventDefault(); e.stopPropagation();
+    const ev = icsEvents[key];
+    if (!ev) return;
+    const uid = key + '-' + Date.now() + '@google-io-2026';
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//AI-Blog//Google IO 2026//EN',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      'UID:' + uid,
+      'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z',
+      'DTSTART:' + ev.start,
+      'DTEND:' + ev.end,
+      'SUMMARY:' + ev.title,
+      'DESCRIPTION:' + ev.desc.replace(/,/g, '\\,').replace(/\n/g,'\\n'),
+      'LOCATION:' + ev.loc,
+      'STATUS:CONFIRMED',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = key + '-google-io-2026.ics';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // Close dropdown after download
+    document.querySelectorAll('.cal-wrap.open').forEach(w => w.classList.remove('open'));
+  }
+</script>
 
 </body>
 </html>

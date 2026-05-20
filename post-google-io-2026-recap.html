@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google I/O 2026: Welcome to the Agentic Era — AI Navigator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --surface2: #1f1f1f;
+      --border: #2a2a2a;
+      --text: #e8e8e8;
+      --muted: #888;
+      --accent-blue: #4285F4;
+      --accent-green: #34A853;
+      --accent-yellow: #FBBC05;
+      --accent-red: #EA4335;
+      --signal: #34A853;
+      --noise: #EA4335;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      font-size: 17px;
+    }
+
+    /* ── SITE NAV ── */
+    .site-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .site-nav__inner {
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 5vw; height: 60px;
+    }
+    .site-nav__logo {
+      font-size: 1rem; font-weight: 700; color: var(--text);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    .site-nav__logo:hover { color: var(--accent-blue); text-decoration: none; }
+    .site-nav__logo-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent-blue); display: inline-block; flex-shrink: 0;
+    }
+    .site-nav__links {
+      display: flex; gap: 1.75rem; list-style: none; align-items: center;
+    }
+    .site-nav__links a {
+      color: var(--muted); font-size: 0.9rem; font-weight: 500;
+      text-decoration: none; transition: color .15s;
+    }
+    .site-nav__links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 520px;
+      display: flex;
+      align-items: flex-end;
+      background: linear-gradient(135deg, #1a1a3e 0%, #0d2060 40%, #0a0a0a 100%);
+      overflow: hidden;
+      padding: 60px 5vw 56px;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url('https://storage.googleapis.com/gweb-uniblog-publish-prod/images/SundarKeynote_tempsocial.width-1300.png');
+      background-size: cover;
+      background-position: center 30%;
+      opacity: 0.18;
+    }
+    .hero-content { position: relative; max-width: 820px; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(66,133,244,0.18); border: 1px solid rgba(66,133,244,0.35);
+      border-radius: 100px; padding: 5px 16px;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.08em;
+      color: #7eb3ff; text-transform: uppercase; margin-bottom: 22px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800; line-height: 1.15;
+      background: linear-gradient(135deg, #fff 30%, #7eb3ff 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 18px;
+    }
+    .hero-meta {
+      display: flex; gap: 20px; align-items: center;
+      font-size: 14px; color: var(--muted);
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 860px; margin: 0 auto; padding: 0 5vw; }
+
+    /* ── SUMMARY CARD ── */
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent-blue);
+      border-radius: 12px; padding: 28px 32px; margin: 48px 0 40px;
+    }
+    .summary-card h2 {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent-blue); margin-bottom: 14px;
+    }
+    .summary-card p { color: #bbb; font-size: 15.5px; line-height: 1.8; }
+
+    /* ── VIDEO EMBED ── */
+    .video-wrap {
+      margin: 40px 0; border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .video-label {
+      background: var(--surface2); padding: 12px 20px;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; color: var(--muted); font-weight: 600;
+    }
+    .video-label .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-red); }
+    .video-wrap iframe {
+      width: 100%; aspect-ratio: 16/9; display: block; border: none;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 14px;
+      overflow: hidden; margin: 40px 0;
+    }
+    .stat { background: var(--surface2); padding: 24px 20px; text-align: center; }
+    .stat-num {
+      font-size: 2rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-blue), #7eb3ff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1.1; margin-bottom: 6px;
+    }
+    .stat-label { font-size: 12px; color: var(--muted); font-weight: 500; line-height: 1.4; }
+
+    /* ── SECTION HEADER ── */
+    h2.section-title {
+      font-size: 1.75rem; font-weight: 800; margin: 60px 0 6px;
+      letter-spacing: -0.02em;
+    }
+    .section-divider { height: 1px; background: var(--border); margin-bottom: 32px; }
+
+    /* ── TOPIC CARD ── */
+    .topic {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden; margin-bottom: 40px;
+    }
+    .topic-header {
+      padding: 26px 28px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    }
+    .topic-header-left { flex: 1; }
+    .topic-num {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      color: var(--muted); text-transform: uppercase; margin-bottom: 8px;
+    }
+    .topic h3 {
+      font-size: 1.25rem; font-weight: 800; line-height: 1.25; margin-bottom: 0;
+      letter-spacing: -0.01em;
+    }
+    .badge {
+      flex-shrink: 0; font-size: 11px; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 6px 14px; border-radius: 100px;
+    }
+    .badge.signal { background: rgba(52,168,83,0.15); color: var(--signal); border: 1px solid rgba(52,168,83,0.3); }
+    .badge.noise  { background: rgba(234,67,53,0.12);  color: var(--noise);  border: 1px solid rgba(234,67,53,0.25); }
+
+    .topic-body { padding: 22px 28px 26px; }
+    .topic-body p { color: #bbb; font-size: 15.5px; margin-bottom: 14px; }
+    .topic-body p:last-child { margin-bottom: 0; }
+
+    .topic-image {
+      width: 100%; display: block; object-fit: cover;
+      max-height: 380px; border-bottom: 1px solid var(--border);
+    }
+    .topic-image-caption {
+      font-size: 12px; color: var(--muted); text-align: center;
+      padding: 8px 20px; background: var(--surface2); border-bottom: 1px solid var(--border);
+      font-style: italic;
+    }
+
+    .verdict-box {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: var(--surface2); border-radius: 10px;
+      padding: 14px 16px; margin-top: 16px; border: 1px solid var(--border);
+    }
+    .verdict-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+    .verdict-text { font-size: 14.5px; color: #ccc; line-height: 1.6; }
+    .verdict-text strong { color: var(--text); }
+
+    /* ── CHART ── */
+    .chart-wrap {
+      background: var(--surface2); border-radius: 14px;
+      border: 1px solid var(--border); padding: 24px; margin: 30px 0;
+    }
+    .chart-title {
+      font-size: 13px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px;
+    }
+    .bar-chart { display: flex; flex-direction: column; gap: 14px; }
+    .bar-row { display: flex; align-items: center; gap: 12px; }
+    .bar-label { font-size: 13px; color: var(--text); width: 160px; flex-shrink: 0; font-weight: 500; }
+    .bar-track { flex: 1; background: rgba(255,255,255,0.07); border-radius: 100px; height: 22px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 100px; display: flex; align-items: center; padding-left: 10px; }
+    .bar-val { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); white-space: nowrap; }
+
+    /* ── ONES TO WATCH ── */
+    .watch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 24px; }
+    .watch-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 22px 20px;
+    }
+    .watch-card .watch-icon { font-size: 1.6rem; margin-bottom: 10px; }
+    .watch-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .watch-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* ── TAKEAWAY ── */
+    .takeaway {
+      background: linear-gradient(135deg, #0d2060 0%, #1a1a3e 100%);
+      border: 1px solid rgba(66,133,244,0.3);
+      border-radius: 16px; padding: 36px 40px; margin: 48px 0;
+    }
+    .takeaway h2 {
+      font-size: 1.1rem; font-weight: 800; color: #7eb3ff;
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;
+    }
+    .takeaway p { color: #ccc; line-height: 1.9; font-size: 16px; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 32px 5vw;
+      text-align: center; color: var(--muted); font-size: 13px; margin-top: 60px;
+    }
+    footer a { color: var(--accent-blue); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .stats-bar { grid-template-columns: 1fr; }
+      .topic-header { flex-direction: column; }
+      .badge { align-self: flex-start; }
+      .takeaway { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ SITE NAV ══ -->
+<nav class="site-nav">
+  <div class="site-nav__inner">
+    <a href="index.html" class="site-nav__logo">
+      <span class="site-nav__logo-dot"></span>
+      AI Navigator
+    </a>
+    <ul class="site-nav__links">
+      <li><a href="index.html">Blog</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span>◆</span> Shoreline Amphitheatre · 19 May 2026
+    </div>
+    <h1>Google I/O 2026:<br>Welcome to the Agentic Era</h1>
+    <div class="hero-meta">
+      <span>📅 19 May 2026</span>
+      <span>·</span>
+      <span>⏱ 12 min read</span>
+      <span>·</span>
+      <span>✍️ AI Navigator</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="container">
+
+  <!-- EXEC SUMMARY -->
+  <div class="summary-card">
+    <h2>Executive Summary</h2>
+    <p>
+      Google I/O 2026 was less a product showcase and more a declaration of intent: Google is betting everything on agentic AI — software that doesn't just answer questions, but acts on your behalf, around the clock. Sundar Pichai opened with a remarkable figure — 3.2 <em>quadrillion</em> tokens processed per month, up 7× year-on-year — then spent two hours showing exactly where those tokens are going. The headliners were <strong>Gemini Spark</strong> — a true 24/7 personal AI agent — and <strong>Gemini 3.5 Flash</strong>, a frontier model that's 4× faster and half the cost of rivals. On the hardware side, Google's Android XR smart glasses partnership with Samsung, Qualcomm, Gentle Monster, and Warby Parker signals that the post-smartphone era may finally have a credible path. The AI arms race just got a lot more concrete.
+    </p>
+  </div>
+
+  <!-- KEYNOTE VIDEO -->
+  <div class="video-wrap">
+    <div class="video-label"><span class="dot"></span> Official Google I/O '26 Keynote — Watch in Full</div>
+    <iframe
+      src="https://www.youtube.com/embed/F5siZtTwGdg"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+      title="Google I/O 2026 Keynote">
+    </iframe>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-num">3.2Q+</div>
+      <div class="stat-label">Tokens processed monthly<br>(up 7× YoY)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">900M</div>
+      <div class="stat-label">Monthly active users<br>on the Gemini app</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">$180B</div>
+      <div class="stat-label">Expected 2026 capex<br>(~6× 2022 levels)</div>
+    </div>
+  </div>
+
+  <!-- SECTION: TRENDING TOPICS -->
+  <h2 class="section-title">Trending Topics</h2>
+  <div class="section-divider"></div>
+
+  <!-- 1. GEMINI SPARK -->
+  <div class="topic">
+    <img
+      class="topic-image"
+      src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Geminiapp_Bento_hero.width-600.format-webp.webp"
+      alt="Gemini Spark and the new Gemini app experience"
+    />
+    <div class="topic-image-caption">The new Gemini app — now powered by Spark and the Neural Expressive design language. © Google 2026</div>
+    <div class="topic-header">
+      <div class="topic-header-left">
+        <div class="topic-num">Topic 1</div>
+        <h3>Gemini Spark — Your 24/7 Personal AI Agent</h3>
+      </div>
+      <span class="badge signal">🟢 Signal</span>
+    </div>
+    <div class="topic-body">
+      <p><strong>What:</strong> Gemini Spark is a persistent AI agent inside the Gemini app that works autonomously — drafting emails, managing your calendar, running research, and completing multi-step workflows — without you needing to keep the app open. It runs on dedicated virtual machines in Google Cloud and operates continuously in the background.</p>
+      <p><strong>Why it's trending:</strong> Spark integrates directly with Gmail, Calendar, Google Tasks, and (coming this summer) third-party apps via MCP. It rolls out to AI Ultra subscribers in the US next week. On Android, a new ambient UI layer called <strong>Android Halo</strong> surfaces agent progress at the very top of your screen, so you can watch Spark work without opening anything. Later this summer, Spark will operate directly inside Chrome across the web.</p>
+      <div class="verdict-box">
+        <span class="verdict-icon">🟢</span>
+        <span class="verdict-text"><strong>Verdict — Signal.</strong> This is the most substantive shift in how people will interact with Google software. Spark isn't a chatbot with new tricks; it's a long-horizon autonomous agent that persists across sessions. If it works as demoed, the implications for how we manage email, scheduling, and research are profound. Watch the rollout closely.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. GEMINI 3.5 FLASH -->
+  <div class="topic">
+    <img
+      class="topic-image"
+      src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/gemini-3-5__keywordstatement__met.width-600.format-webp.webp"
+      alt="Gemini 3.5 Flash — frontier intelligence with action"
+    />
+    <div class="topic-image-caption">Gemini 3.5 Flash: the fastest frontier model on the planet, at half the price of competitors. © Google 2026</div>
+    <div class="topic-header">
+      <div class="topic-header-left">
+        <div class="topic-num">Topic 2</div>
+        <h3>Gemini 3.5 Flash — A Frontier Model That's Actually Fast</h3>
+      </div>
+      <span class="badge signal">🟢 Signal</span>
+    </div>
+    <div class="topic-body">
+      <p><strong>What:</strong> Gemini 3.5 Flash surpasses Gemini 3.1 Pro on virtually all benchmarks — including a dramatic jump on GDPVal, which measures real-world economically valuable tasks — while outputting tokens at <strong>4× the speed</strong> of comparable frontier models. It's available today across the Gemini app, Search, Antigravity 2.0, and the Gemini API.</p>
+      <p><strong>Why it's trending:</strong> Sundar cited a striking figure: large companies spending on frontier AI are "blowing through their annual token budgets and it's only May." Google's pitch is that shifting 80% of workloads from other frontier models to 3.5 Flash could save <strong>$1B+ annually</strong> for top-tier enterprise users. Google is also using it internally, processing over 3 trillion tokens per day on its own developer tooling.</p>
+
+      <div class="chart-wrap">
+        <div class="chart-title">Output Speed Comparison (tokens/second, relative to frontier baseline)</div>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label">Gemini 3.5 Flash</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:100%; background: linear-gradient(90deg, #4285F4, #7eb3ff);">
+                <span class="bar-val">4× faster than frontier</span>
+              </div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">GPT-class frontier</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:25%; background: rgba(255,255,255,0.2);">
+                <span class="bar-val">Baseline</span>
+              </div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Claude Opus-class</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:22%; background: rgba(255,255,255,0.15);">
+                <span class="bar-val">~Baseline</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:#666;margin-top:14px;">Source: Artificial Analysis Intelligence Index vs. Output Speed, as presented at Google I/O 2026 keynote.</p>
+      </div>
+
+      <div class="verdict-box">
+        <span class="verdict-icon">🟢</span>
+        <span class="verdict-text"><strong>Verdict — Signal.</strong> Speed and cost are what convert demos into production deployments. If these benchmarks hold up under independent evaluation, 3.5 Flash will be the model developers reach for by default — eating significantly into OpenAI and Anthropic's enterprise share.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. GEMINI OMNI -->
+  <div class="topic">
+    <img
+      class="topic-image"
+      src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/GeminiOmni_social.width-600.format-webp.webp"
+      alt="Gemini Omni — multimodal video generation model"
+    />
+    <div class="topic-image-caption">Gemini Omni Flash: any input (text, image, audio, video) → grounded video output. © Google 2026</div>
+    <div class="topic-header">
+      <div class="topic-header-left">
+        <div class="topic-num">Topic 3</div>
+        <h3>Gemini Omni — Video Generation from Any Input</h3>
+      </div>
+      <span class="badge signal">🟢 Signal</span>
+    </div>
+    <div class="topic-body">
+      <p><strong>What:</strong> Gemini Omni is Google's first model capable of generating video from any combination of inputs — text, images, audio, and video — grounded in real-world knowledge. The debut model, Gemini Omni Flash, is live today in the Gemini app, Google Flow, and YouTube Shorts Remix. A Pro model follows later.</p>
+      <p><strong>Why it's trending:</strong> OpenAI's Sora has been the benchmark for AI video generation. Omni's distinguishing factor is that it combines generation <em>and</em> Gemini's deep reasoning — it doesn't just create pretty clips, it understands context. YouTube Shorts Remix powered by Omni is rolling out this week; developers get API access in the coming weeks. The Flow app is also now available on Android in beta.</p>
+      <div class="verdict-box">
+        <span class="verdict-icon">🟢</span>
+        <span class="verdict-text"><strong>Verdict — Signal.</strong> Multimodal generation at this scale, integrated directly into YouTube's 2.7B-user platform, is disruptive to the creator economy. Content production costs for short-form video are about to fall sharply. This will matter in 6–12 months as creator tooling matures around Omni.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. SEARCH OVERHAUL -->
+  <div class="topic">
+    <img
+      class="topic-image"
+      src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Search_AI_and_search_engine_v46_1.width-600.format-webp.webp"
+      alt="Google Search in the agentic era"
+    />
+    <div class="topic-image-caption">Google Search gets its most significant upgrade since the web began. © Google 2026</div>
+    <div class="topic-header">
+      <div class="topic-header-left">
+        <div class="topic-num">Topic 4</div>
+        <h3>Google Search — The Biggest Upgrade in Nearly 30 Years</h3>
+      </div>
+      <span class="badge signal">🟢 Signal</span>
+    </div>
+    <div class="topic-body">
+      <p><strong>What:</strong> AI Mode in Search — already surpassing <strong>1 billion monthly active users</strong> after just one year — is now powered by Gemini 3.5 Flash. A new intelligent search box expands as you type, anticipating intent beyond autocomplete. New <strong>Information Agents</strong> monitor the web 24/7 on your behalf. And for complex tasks, Search will build persistent, custom <strong>mini-app dashboards</strong> using Antigravity's agentic coding — rolling out for AI Pro and Ultra users this summer.</p>
+      <p><strong>Why it's trending:</strong> AI Overviews already has 2.5 billion monthly active users. Google is threading a needle: making Search more powerful without cannibalising the web ecosystem that funds it. Generative UI — dynamic layouts and interactive visuals built on-the-fly for your individual query — rolls out for all users this summer, free of charge.</p>
+      <div class="verdict-box">
+        <span class="verdict-icon">🟢</span>
+        <span class="verdict-text"><strong>Verdict — Signal.</strong> Information Agents are the most threatening feature to traditional search workflows and the most valuable if they work. Search has been a box you type into for 30 years. Google is turning it into an ambient intelligence layer that works for you when you're not looking.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. ANDROID XR SMART GLASSES -->
+  <div class="topic">
+    <img
+      class="topic-image"
+      src="https://i0.wp.com/9to5google.com/wp-content/uploads/sites/4/2026/05/Android-XR-audio-glasses-cover.jpg?ssl=1"
+      alt="Android XR audio glasses from Google"
+    />
+    <div class="topic-image-caption">Android XR intelligent eyewear — audio glasses launching fall 2026, designed by Gentle Monster and Warby Parker. © 9to5Google 2026</div>
+    <div class="topic-header">
+      <div class="topic-header-left">
+        <div class="topic-num">Topic 5</div>
+        <h3>Android XR & Intelligent Eyewear — The Post-Phone Form Factor Arrives</h3>
+      </div>
+      <span class="badge signal">🟢 Signal</span>
+    </div>
+    <div class="topic-body">
+      <p><strong>What:</strong> Google revealed its "intelligent eyewear" strategy across two form factors: <strong>audio glasses</strong> (Gemini assistance spoken in your ear, hands-free) launching this fall; and <strong>display glasses</strong> (visual Gemini overlays) to follow. The hardware is built with Samsung and Qualcomm silicon, with exterior designs by luxury eyewear brands Gentle Monster and Warby Parker. Separately, Xreal's <strong>Project Aura</strong> — a full Android XR headset with a 70° field of view and Qualcomm Snapdragon inside — confirmed a global launch before end of 2026.</p>
+      <p><strong>Why it's trending:</strong> Three Android XR products confirmed for 2026. The glasses pair with both Android phones <em>and</em> the iPhone — removing a major adoption barrier. Google has opened public applications for its Android XR Developer Catalyst Program, and hardware dev kits ship to selected teams in the coming weeks.</p>
+      <div class="verdict-box">
+        <span class="verdict-icon">🟢</span>
+        <span class="verdict-text"><strong>Verdict — Signal.</strong> Meta's Ray-Ban smart glasses proved the market exists. Google arriving with Gemini integration, Qualcomm silicon, premium fashion brands, and a full OS ecosystem is a materially stronger bet. Audio glasses this fall is the domino — if they ship well, display glasses follow, and the phone starts losing its throne.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. UNIVERSAL CART -->
+  <div class="topic">
+    <img
+      class="topic-image"
+      src="https://i0.wp.com/9to5google.com/wp-content/uploads/sites/4/2026/05/google-gemini-universal-cart-1.jpg?ssl=1"
+      alt="Google Universal Cart — agentic shopping"
+    />
+    <div class="topic-image-caption">Universal Cart: add from Search, YouTube, or Gmail — Google finds the deal, flags incompatibilities, checks loyalty perks. © 9to5Google 2026</div>
+    <div class="topic-header">
+      <div class="topic-header-left">
+        <div class="topic-num">Topic 6</div>
+        <h3>Universal Cart — Google Wants to Own the Checkout</h3>
+      </div>
+      <span class="badge signal">🟢 Signal</span>
+    </div>
+    <div class="topic-body">
+      <p><strong>What:</strong> Universal Cart is a Gemini-powered cross-platform shopping cart that lets you add products from Search, YouTube, Gmail, or the Gemini app into a single intelligent hub. It automatically finds price drops, tracks price history, alerts on stock changes, and — notably — flags product incompatibilities (e.g. a motherboard that won't work with a processor you've already added). Built on Google Wallet, it understands loyalty cards, payment method perks, and merchant offers automatically.</p>
+      <p><strong>Why it's trending:</strong> Rolling out in the US this summer in Search and Gemini, with YouTube and Gmail to follow. The cross-platform awareness — knowing what you watched on YouTube and connecting it to purchase intent in Search — is something no competitor can currently replicate at Google's scale.</p>
+      <div class="verdict-box">
+        <span class="verdict-icon">🟢</span>
+        <span class="verdict-text"><strong>Verdict — Signal.</strong> Google has tried commerce before and failed to stick. What's different here is the intelligence layer — this cart manages your purchase rather than just holding items. If adoption sticks, it reshapes Google's revenue story from "ad clicks to purchase" to a closed-loop commerce platform, directly threatening Amazon.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. ASK YOUTUBE + DOCS LIVE -->
+  <div class="topic">
+    <img
+      class="topic-image"
+      src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Ask_YouTube_Results_.width-100.format-webp.webp"
+      alt="Ask YouTube — conversational video search"
+    />
+    <div class="topic-image-caption">Ask YouTube: conversational queries, instant relevant clip jumps — no more digging through video timelines. © Google 2026</div>
+    <div class="topic-header">
+      <div class="topic-header-left">
+        <div class="topic-num">Topic 7</div>
+        <h3>Ask YouTube & Docs Live — Voice as the New Interface</h3>
+      </div>
+      <span class="badge signal">🟢 Signal</span>
+    </div>
+    <div class="topic-body">
+      <p><strong>What:</strong> Two standout UX upgrades signal a broader shift. <strong>Ask YouTube</strong> reimagines YouTube search: conversational queries with follow-ups, finding the exact moment in a video that answers your question — not just a list of videos. <strong>Docs Live</strong> lets you brain-dump ideas verbally; Gemini turns the stream-of-consciousness into a structured document in real-time. Similar voice-to-structure features are coming to Gmail and Google Keep this summer.</p>
+      <p><strong>Why it's trending:</strong> Ask YouTube is testing now for Premium subscribers at youtube.com/new, rolling out broadly across the US this summer. Docs Live hits AI Pro/Ultra subscribers this summer. The underlying audio models have crossed a quality threshold — these understand intent from messy verbal input, not just transcription with a formatting layer.</p>
+      <div class="verdict-box">
+        <span class="verdict-icon">🟢</span>
+        <span class="verdict-text"><strong>Verdict — Signal.</strong> Voice interfaces have failed for decades because the output was bad. With frontier-grade audio understanding, that barrier is finally falling. Docs Live in particular has real productivity implications for anyone who thinks faster than they type.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. TPU 8 + CAPEX -->
+  <div class="topic">
+    <img
+      class="topic-image"
+      src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/two_chips_for_the_agentic_era_her.width-600.format-webp.webp"
+      alt="TPU 8t and TPU 8i — Google's 8th generation AI chips"
+    />
+    <div class="topic-image-caption">TPU 8t (training) and TPU 8i (inference) — the two-chip strategy for the agentic era. © Google 2026</div>
+    <div class="topic-header">
+      <div class="topic-header-left">
+        <div class="topic-num">Topic 8</div>
+        <h3>$180B Capex & TPU 8 — Google Is Building the AI Substrate</h3>
+      </div>
+      <span class="badge signal">🟢 Signal</span>
+    </div>
+    <div class="topic-body">
+      <p><strong>What:</strong> Google announced expected 2026 capital expenditure of <strong>$180–190B</strong> — roughly 6× what it spent in 2022. The 8th generation of TPUs splits into two specialized chips: <strong>TPU 8t</strong> for training (3× raw compute vs. prior gen, scaling to more than 1 million TPUs globally across multiple data centers) and <strong>TPU 8i</strong> for inference (dramatically lower latency, 2× better performance-per-watt). Both are already serving Gemini 3.5 Flash at 19 billion tokens per minute.</p>
+      <p><strong>Why it's trending:</strong> The scale of infrastructure spend here is staggering. Training distributed across 1M+ TPUs means Google can create the largest training cluster in the world — building in weeks what would otherwise take months. This is foundational to who gets to train the next generation of models.</p>
+
+      <div class="chart-wrap">
+        <div class="chart-title">Google Annual Capex — AI Infrastructure Investment</div>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label">2022</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:17%; background: rgba(66,133,244,0.35);">
+                <span class="bar-val">$31B</span>
+              </div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">2023 (est.)</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:25%; background: rgba(66,133,244,0.45);">
+                <span class="bar-val">~$45B</span>
+              </div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">2024 (est.)</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:42%; background: rgba(66,133,244,0.6);">
+                <span class="bar-val">~$75B</span>
+              </div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">2026 (projected)</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:100%; background: linear-gradient(90deg, #4285F4, #7eb3ff);">
+                <span class="bar-val">$180–190B</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:#666;margin-top:14px;">Source: Sundar Pichai, Google I/O 2026 keynote. 2022 figure is confirmed; intermediate years estimated for visual comparison.</p>
+      </div>
+
+      <div class="verdict-box">
+        <span class="verdict-icon">🟢</span>
+        <span class="verdict-text"><strong>Verdict — Signal.</strong> Infrastructure spend of this magnitude is a multi-year moat. Google's vertically integrated approach — custom silicon, custom training stack (JAX/Pathways), and billion-user products to run it through — is a compound advantage that's very difficult to replicate.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONES TO WATCH -->
+  <h2 class="section-title">Ones to Watch 👀</h2>
+  <div class="section-divider"></div>
+  <p style="color:#999; margin-bottom: 20px;">Early-stage developments that didn't make the main list but are worth monitoring closely over the next 6 months.</p>
+  <div class="watch-grid">
+    <div class="watch-card">
+      <div class="watch-icon">🧬</div>
+      <h4>Gemini for Science</h4>
+      <p>A new AI research acceleration platform connecting Gemini's reasoning to 30+ major life science databases. Co-Scientist, an AI research partner, is available now on Google Labs. The implications for drug discovery and materials science are enormous — but domain-specific validation is still needed at scale.</p>
+    </div>
+    <div class="watch-card">
+      <div class="watch-icon">🌍</div>
+      <h4>Project Genie + Street View</h4>
+      <p>Google DeepMind's Project Genie can now simulate real-world places using Street View data — generating interactive, navigable environments from 2D imagery. Applications in training robotics, city planning, and immersive search are beginning to be explored. An early-stage bet on the future of world models.</p>
+    </div>
+    <div class="watch-card">
+      <div class="watch-icon">🖼️</div>
+      <h4>Google Pics</h4>
+      <p>A new standalone AI image creation and editing tool built on the Nano Banana model. Unlike flat image editors, Pics treats every element as an independent object — swap, edit, or refine specific parts. Rolling out to AI Pro/Ultra in Workspace this summer. Potential to challenge Adobe in casual creative work.</p>
+    </div>
+  </div>
+
+  <!-- 35-MINUTE RECAP VIDEO -->
+  <div style="margin: 48px 0 0;">
+    <div class="video-wrap">
+      <div class="video-label"><span class="dot"></span> Google I/O 2026 — Keynote in 35 Minutes (Quick Recap)</div>
+      <iframe
+        src="https://www.youtube.com/embed/OMhKgQmeMhI"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        title="Google I/O 2026 Keynote in 35 Minutes">
+      </iframe>
+    </div>
+  </div>
+
+  <!-- TOKEN GROWTH CHART -->
+  <div class="chart-wrap" style="margin: 40px 0 48px;">
+    <div class="chart-title">Monthly Tokens Processed Across Google Surfaces — The Scale of AI Adoption</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">May 2024</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:0.5%; background: rgba(66,133,244,0.3); min-width: 70px;">
+            <span class="bar-val">9.7 trillion</span>
+          </div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">May 2025</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:15%; background: rgba(66,133,244,0.55);">
+            <span class="bar-val">480 trillion</span>
+          </div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">May 2026</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:100%; background: linear-gradient(90deg, #4285F4, #34A853);">
+            <span class="bar-val">3.2+ quadrillion (7× YoY growth)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:#666;margin-top:14px;">Source: Sundar Pichai, Google I/O 2026 keynote. Chart scaled for visual contrast — actual growth is exponential.</p>
+  </div>
+
+  <!-- TAKEAWAY -->
+  <div class="takeaway">
+    <h2>This Week's Takeaway</h2>
+    <p>
+      Google I/O 2026 tells a single coherent story: we are moving from AI as a tool you prompt to AI as an agent that acts. Gemini Spark, Information Agents in Search, agentic shopping via Universal Cart, and voice-driven creation in Docs Live are all expressions of the same thesis — the best interface is the one that disappears. What makes this I/O different from previous years is the combination of breadth and specificity: these aren't vague roadmap promises, they are shipping products with dates. The hardware play — smart glasses designed by Warby Parker and Gentle Monster with Gemini inside — suggests Google has learned from the Glass debacle and is this time threading the needle between utility and wearability. The $180B infrastructure bet is the clearest signal of all: Google doesn't think it's in a race it can afford to lose, and it's spending accordingly. Over the next 6–12 months, the question isn't whether these products will arrive — it's whether users will adopt them at the scale Google needs. That's where things get interesting.
+    </p>
+  </div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<footer>
+  <p style="margin-bottom: 10px;">
+    <strong>Sources:</strong>
+    <a href="https://blog.google/innovation-and-ai/sundar-pichai-io-2026/" target="_blank">Google Blog — Sundar Pichai's I/O 2026 Keynote</a> ·
+    <a href="https://9to5google.com/2026/05/19/google-io-2026-news/" target="_blank">9to5Google — Everything Announced at I/O 2026</a> ·
+    <a href="https://www.tomsguide.com/news/live/google-io-2026-live-news-updates" target="_blank">Tom's Guide Live Blog</a> ·
+    <a href="https://gizmodo.com/google-and-xreals-project-aura-smart-glasses-are-no-longer-a-concept-2000760588" target="_blank">Gizmodo — Project Aura</a> ·
+    <a href="https://blog.google/products-and-platforms/products/shopping/google-shopping-cart/" target="_blank">Google Blog — Universal Cart</a>
+  </p>
+  <p style="color:#555;">© 2026 AI Navigator · Lorenzo Bartolo · Product images courtesy Google LLC &amp; 9to5Google · Published 19 May 2026</p>
+</footer>
+
+</body>
+</html>
