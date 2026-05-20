@@ -142,16 +142,6 @@ const POSTS = [
     readTime: "12 min read",
     href: "post-google-io-2026-recap.html",
   },
-  {
-    id: 14,
-    title: "I Wasn't Supposed to Find This — Hidden World for Hermes Agent",
-    date: "2026-05-20",
-    excerpt:
-      "I was spelunking through the Nous Research ecosystem when a single URL buried in a profile stopped me cold. No announcement. No docs. Just a world for agents.",
-    tags: ["Experiments", "AI Tools"],
-    readTime: "8 min read",
-    href: "hermes-world-secret.html",
-  },
 ];
 
 // Tag → CSS modifier map
