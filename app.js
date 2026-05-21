@@ -168,11 +168,21 @@ function formatDate(iso) {
 // ─────────────────────────────────────────────
 // POST CARD RENDERER
 // ─────────────────────────────────────────────
+/** Returns true if the post was published within the last 14 days */
+function isNew(post) {
+  const published = new Date(post.date);
+  const now = new Date();
+  const diffDays = (now - published) / (1000 * 60 * 60 * 24);
+  return diffDays <= 14;
+}
+
 function renderCard(post) {
+  const newBadge = isNew(post) ? `<span class="badge--new">New</span>` : "";
   return `
     <a class="post-card" href="${post.href}">
       <div class="post-card__tags">
         ${post.tags.map(t => tagHTML(t)).join("")}
+        ${newBadge}
       </div>
       <div class="post-card__title">${post.title}</div>
       <div class="post-card__excerpt">${post.excerpt}</div>
@@ -212,8 +222,11 @@ function initHomePage() {
   function renderGrid() {
     const filtered =
       activeTag === "All"
-        ? POSTS
+        ? [...POSTS]
         : POSTS.filter(p => p.tags.includes(activeTag));
+
+    // Sort newest first
+    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     if (filtered.length === 0) {
       grid.innerHTML = `<div class="no-results"><p>No posts tagged "${activeTag}" yet.</p></div>`;
