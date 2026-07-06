@@ -423,19 +423,26 @@ function initSortableTable(tableId) {
 // ─────────────────────────────────────────────
 // CHART HELPERS (Chart.js assumed loaded)
 // ─────────────────────────────────────────────
+const CHART_TEXT = "#9aa3b8";
+const CHART_GRID = "rgba(255,255,255,0.07)";
+
 const CHART_DEFAULTS = {
   responsive: true,
   maintainAspectRatio: true,
+  color: CHART_TEXT,
   plugins: {
-    legend: { position: "bottom", labels: { boxWidth: 12, padding: 16, font: { size: 12 } } },
-    tooltip: { bodyFont: { size: 12 }, titleFont: { size: 13, weight: "bold" } },
+    legend: { position: "bottom", labels: { boxWidth: 12, padding: 16, font: { size: 12 }, color: CHART_TEXT } },
+    tooltip: {
+      bodyFont: { size: 12 }, titleFont: { size: 13, weight: "bold" },
+      backgroundColor: "rgba(10,12,22,0.92)", borderColor: "rgba(139,124,255,0.35)", borderWidth: 1,
+    },
   },
 };
 
 function chartColors(n) {
   const palette = [
-    "#2563eb", "#16a34a", "#d97706", "#9333ea",
-    "#e11d48", "#0891b2", "#ea580c", "#4f46e5",
+    "#8b7cff", "#3ee6d8", "#ff5ca8", "#ffc456",
+    "#60a5fa", "#4ade80", "#f97362", "#c084fc",
   ];
   return palette.slice(0, n);
 }
@@ -461,8 +468,8 @@ function buildBarChart(canvasId, { labels, datasets, title }) {
         title: title ? { display: true, text: title, font: { size: 13, weight: "600" } } : undefined,
       },
       scales: {
-        y: { beginAtZero: true, grid: { color: "#f3f4f6" }, ticks: { font: { size: 11 } } },
-        x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+        y: { beginAtZero: true, grid: { color: CHART_GRID }, ticks: { font: { size: 11 }, color: CHART_TEXT } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 }, color: CHART_TEXT } },
       },
     },
   });
@@ -490,9 +497,9 @@ function buildRadarChart(canvasId, { labels, datasets }) {
       scales: {
         r: {
           min: 0, max: 10,
-          ticks: { stepSize: 2, font: { size: 10 }, backdropColor: "transparent" },
-          grid: { color: "#e5e7eb" },
-          pointLabels: { font: { size: 11 } },
+          ticks: { stepSize: 2, font: { size: 10 }, backdropColor: "transparent", color: CHART_TEXT },
+          grid: { color: CHART_GRID },
+          pointLabels: { font: { size: 11 }, color: CHART_TEXT },
         },
       },
     },
@@ -520,8 +527,8 @@ function buildLineChart(canvasId, { labels, datasets }) {
     options: {
       ...CHART_DEFAULTS,
       scales: {
-        y: { beginAtZero: true, grid: { color: "#f3f4f6" }, ticks: { font: { size: 11 } } },
-        x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+        y: { beginAtZero: true, grid: { color: CHART_GRID }, ticks: { font: { size: 11 }, color: CHART_TEXT } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 }, color: CHART_TEXT } },
       },
     },
   });
